@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": 101,
+      "name": "Anel nossa Senhora",
+      "category": "aneis",
+      "price": 49.9,
+      "badge": "Novo",
+      "image": "aneis/anel1.jpg",
+      "description": "O devoto Anel nossa Senhora protege e embeleza suas mãos com um acabamento delicado em ouro 18K."
+    },
+    {
+      "id": 501,
+      "name": "Brinco Zircônia Quadrado 6x6mm",
+      "category": "brincos",
+      "price": 137,
+      "badge": "Lançamento",
+      "image": "brincos/brinco1.jpg",
+      "description": "O deslumbrante Brinco Zircônia Quadrado 6x6mm combina geometria perfeita e alto brilho em um banho de ouro 18K impecável."
+    }
+  ]
+}

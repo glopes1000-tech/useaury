@@ -1,0 +1,26 @@
+backend:
+  name: github
+repo: "glopes1000-tech/useaury"  branch: "main"
+
+media_folder: "imagens-produtos"
+public_folder: "/imagens-produtos"
+
+collections:
+  - name: "catalogo"
+    label: "Catálogo de Produtos"
+    files:
+      - file: "produtos.json"
+        label: "Produtos da Loja"
+        name: "produtos"
+        fields:
+          - label: "Lista de Produtos"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "ID Único", name: "id", widget: "number"}
+              - {label: "Nome da Joia", name: "name", widget: "string"}
+              - {label: "Categoria", name: "category", widget: "select", options: ["aneis", "gargantilhas", "brincos", "pulseiras", "escapularios", "conjuntos"]}
+              - {label: "Preço (R$)", name: "price", widget: "number", value_type: "float"}
+              - {label: "Selo / Badge (Opcional)", name: "badge", widget: "string", required: false}
+              - {label: "Foto do Produto", name: "image", widget: "image"}
+              - {label: "Descrição Completa", name: "description", widget: "text"}
