@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -62,7 +61,7 @@
     <!-- Top Announcement Bar -->
     <div onclick="toggleBrindeModal(true)" class="bg-gradient-to-r from-wine-950 via-wine-900 to-wine-950 text-gold-400 text-xs py-2.5 px-4 text-center font-medium border-b border-gold-500/20 tracking-wide flex items-center justify-center gap-2 shadow-inner cursor-pointer hover:text-white transition">
         <i class="fa-solid fa-gift text-gold-500 animate-pulse"></i>
-        <span>Nas compras a partir de <strong>R$ 189,90</strong>, você recebe um presente exclusivo Aury! <span class="underline ml-1 font-semibold text-gold-300">Ver Presente</span></span>
+        <span>Nas compras a partir de <strong>R\$ 189,90</strong>, você recebe um presente exclusivo Aury! <span class="underline ml-1 font-semibold text-gold-300">Ver Presente</span></span>
     </div>
 
     <!-- Header / Navigation -->
@@ -71,7 +70,7 @@
             <div class="flex items-center justify-between h-20">
                 
                 <!-- Logo Section -->
-                <a href="admin/index.html" class="flex items-center gap-3 group text-left cursor-pointer bg-transparent border-0 p-0 focus:outline-none" title="Área Restrita - Painel Administrativo">
+                <button onclick="pedirSenhaAdmin()" class="flex items-center gap-3 group text-left cursor-pointer bg-transparent border-0 p-0 focus:outline-none" title="Área Restrita - Donas da Aury">
                     <div class="w-12 h-12 rounded-full overflow-hidden border border-gold-500/60 p-1 bg-wine-950 shadow-md flex items-center justify-center">
                         <img src="logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="hidden w-full h-full items-center justify-center">
@@ -86,7 +85,7 @@
                         <span class="font-serif text-2xl font-bold tracking-[0.25em] text-white group-hover:text-gold-500 transition">A U R Y</span>
                         <span class="text-[9px] tracking-[0.3em] text-gold-500 uppercase -mt-1 font-semibold">Semijoias</span>
                     </div>
-                </a>
+                </button>
 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center space-x-5 text-sm font-medium tracking-wide">
@@ -97,9 +96,6 @@
                     <button onclick="filterCategory('pulseiras')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Pulseiras e Braceletes</button>
                     <button onclick="filterCategory('escapularios')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Escapulários</button>
                     <button onclick="filterCategory('conjuntos')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Conjuntos</button>
-                    <button onclick="toggleSobreModal(true)" class="nav-link text-gold-400 font-semibold hover:text-gold-300 transition py-2 flex items-center gap-1">
-                        <i class="fa-solid fa-sparkles text-xs"></i> Sobre a Aury
-                    </button>
                 </nav>
 
                 <!-- Search & Action Icons -->
@@ -141,9 +137,9 @@
                     <a href="#catalogo" class="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold text-xs uppercase tracking-wider rounded-full transition shadow-lg hover:shadow-gold-500/20">
                         Ver Coleção
                     </a>
-                    <button onclick="toggleSobreModal(true)" class="px-8 py-3.5 bg-transparent border border-gold-500/50 hover:border-gold-500 text-gold-500 text-xs uppercase tracking-wider rounded-full transition hover:bg-gold-500/10 flex items-center gap-2">
-                        <i class="fa-solid fa-gem"></i> Conheça a Aury
-                    </button>
+                    <a href="https://wa.me/5591984099331?text=Olá!%20Gostaria%20de%20atendimento%20VIP%20no%20catálogo." target="_blank" class="px-8 py-3.5 bg-transparent border border-gold-500/50 hover:border-gold-500 text-gold-500 text-xs uppercase tracking-wider rounded-full transition hover:bg-gold-500/10 flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp"></i> Atendimento VIP
+                    </a>
                 </div>
             </div>
 
@@ -194,7 +190,7 @@
                         Seu pedido com um toque de cuidado extra
                     </h2>
                     <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                        Nas compras a partir de <strong class="text-gold-400">R$ 189,90</strong>, você ganha nosso <strong>Espelho de Bolsa Elegance Aury</strong> com capa em couro ecológico marfim e monograma bordado. O acessório compacto e sofisticado perfeito para ter sempre com você!
+                        Nas compras a partir de <strong class="text-gold-400">R\$ 189,90</strong>, você ganha nosso <strong>Espelho de Bolsa Elegance Aury</strong> com capa em couro ecológico marfim e monograma bordado. O acessório compacto e sofisticado perfeito para ter sempre com você!
                     </p>
                     <button onclick="toggleBrindeModal(true)" class="inline-flex items-center gap-2 px-6 py-2.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold text-xs uppercase tracking-wider rounded-full transition shadow-md">
                         <i class="fa-regular fa-eye"></i> Ver Detalhes do Presente
@@ -241,48 +237,6 @@
 
     </main>
 
-    <!-- Modal Institucional - Sobre a Aury -->
-    <div id="sobre-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div onclick="toggleSobreModal(false)" class="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full border border-gold-500/30 p-6 md:p-10">
-                
-                <div class="flex justify-between items-center border-b border-gold-500/20 pb-4 mb-6">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full border border-gold-500/60 p-0.5 bg-wine-900 flex items-center justify-center overflow-hidden">
-                            <img src="logo aury.png" alt="Aury" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none';">
-                        </div>
-                        <div>
-                            <h3 class="font-serif text-2xl font-bold text-wine-950">Aury Semijoias</h3>
-                            <p class="text-[10px] text-gold-600 uppercase tracking-widest font-semibold">Sua essência merece brilhar</p>
-                        </div>
-                    </div>
-                    <button onclick="toggleSobreModal(false)" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-wine-900 hover:text-white flex items-center justify-center transition text-gray-600 font-bold">&times;</button>
-                </div>
-
-                <div class="space-y-8 max-h-[70vh] overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
-                    <div class="space-y-3">
-                        <h4 class="font-serif text-2xl font-bold text-wine-900 flex items-center gap-2 border-b border-wine-100 pb-2">
-                            <i class="fa-solid fa-sparkles text-gold-500 text-lg"></i> Quem Somos
-                        </h4>
-                        <p>
-                            A <strong>Aury Semijoias</strong> nasceu para mulheres que reconhecem a beleza nos detalhes e acreditam que a elegância não precisa de ocasião especial para ser vivida.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="mt-8 pt-4 border-t border-gray-100 flex justify-between items-center">
-                    <span class="font-serif text-sm font-bold text-gold-600">Aury Semijoias • Sua essência merece brilhar</span>
-                    <button onclick="toggleSobreModal(false)" class="px-6 py-2.5 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold text-xs uppercase tracking-wider rounded-lg transition shadow">
-                        Fechar
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <!-- Modal do Presente Exclusivo Aury -->
     <div id="brinde-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
@@ -302,11 +256,135 @@
                     <div class="rounded-xl overflow-hidden border border-gold-500/30 shadow-md aspect-video bg-gray-100">
                         <img src="brinde.jpg" alt="Espelho de Bolsa Aury" class="w-full h-full object-cover" onerror="this.src='IMG_8311.jpg'">
                     </div>
+
+                    <div class="text-xs sm:text-sm text-gray-600 leading-relaxed space-y-2">
+                        <p class="font-semibold text-wine-900">
+                            Espelho de Bolsa Retátil em Couro Ecológico Marfim com Monograma Aury
+                        </p>
+                        <p>
+                            Desenvolvido especialmente para clientes Aury, este espelho portátil possui acabamento sofisticado em couro ecológico marfim, estampa bordada do monograma exclusivo da marca e sistema dobrável de suporte.
+                        </p>
+                        <p class="text-gold-600 font-bold text-xs bg-gold-50 border border-gold-200 p-3 rounded-lg flex items-center gap-2">
+                            <i class="fa-solid fa-sparkles"></i> Adicione ao carrinho R\$ 189,90 em semijoias e receba automaticamente em sua caixa especial Aury!
+                        </p>
+                    </div>
                 </div>
 
                 <div class="mt-6 pt-4 border-t border-gray-100 text-right">
                     <button onclick="toggleBrindeModal(false)" class="px-6 py-2.5 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold text-xs uppercase tracking-wider rounded-lg transition shadow">
                         Continuar Comprando
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal do Painel Administrativo Protegido por Senha -->
+    <div id="admin-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleAdminModal(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gray-100 p-6 md:p-8">
+                
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <h3 class="font-serif text-2xl font-bold text-wine-950">🔒 Painel Restrito - Aury Semijoias</h3>
+                    <button onclick="toggleAdminModal(false)" class="text-gray-500 hover:text-wine-900 text-xl font-bold">&times;</button>
+                </div>
+
+                <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4 text-xs">
+                    <input type="hidden" id="edit-id">
+                    
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Nome da Joia:</label>
+                        <input type="text" id="prod-name" required class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="Ex: Anel Luxos Ouro 18k">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Categoria:</label>
+                            <select id="prod-cat" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs">
+                                <option value="aneis">Anéis</option>
+                                <option value="gargantilhas">Gargantilhas</option>
+                                <option value="brincos">Brincos</option>
+                                <option value="pulseiras">Pulseiras e Braceletes</option>
+                                <option value="escapularios">Escapulários</option>
+                                <option value="conjuntos">Conjuntos</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Selo (Opcional):</label>
+                            <input type="text" id="prod-badge" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="Ex: Destaque, Mais Vendido">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Preço Atual (R\$):</label>
+                        <input type="number" step="0.01" id="prod-price" required class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="297.00">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Selecionar Foto no Computador:</label>
+                        <input type="file" id="prod-image-file" accept="image/*" class="w-full p-2 border rounded-lg focus:outline-none focus:border-wine-900 text-xs bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-wine-900 file:text-gold-500 hover:file:bg-wine-950 cursor-pointer">
+                        <p class="text-[10px] text-gray-500 mt-1">Selecione uma imagem do produto direto do seu computador.</p>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Descrição Completa:</label>
+                        <textarea id="prod-desc" rows="3" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="Detalhes do banho..."></textarea>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" class="flex-grow py-3 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold uppercase tracking-wider rounded-lg transition shadow">
+                            Salvar Produto
+                        </button>
+                        <button type="button" onclick="resetForm()" class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg transition">
+                            Limpar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 border-t pt-4">
+                    <h4 class="font-bold text-gray-700 mb-2">Gerenciar Produtos Cadastrados:</h4>
+                    <div id="admin-products-list" class="max-h-48 overflow-y-auto space-y-2 text-xs">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cuidados com as Peças -->
+    <div id="cuidados-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleCuidadosModal(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gold-500/20 p-6 md:p-8">
+                
+                <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-sparkles text-gold-500 text-2xl"></i>
+                        <h3 class="font-serif text-2xl font-bold text-wine-950">Como Cuidar de Suas Peças</h3>
+                    </div>
+                    <button onclick="toggleCuidadosModal(false)" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-wine-900 hover:text-white flex items-center justify-center transition text-gray-600 font-bold">&times;</button>
+                </div>
+
+                <div class="space-y-6 text-xs sm:text-sm max-h-[70vh] overflow-y-auto pr-2">
+                    <div>
+                        <h4 class="font-serif text-lg font-bold text-wine-900 border-b border-gold-500/30 pb-1 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-heart text-gold-500 text-sm"></i> Principais Cuidados
+                        </h4>
+                        <ul class="space-y-2 text-gray-600 leading-relaxed pl-1">
+                            <li><strong class="text-wine-950">• Evite contato com água:</strong> Retire as peças antes do banho, piscina ou mar.</li>
+                            <li><strong class="text-wine-950">• Cuidado com cosméticos:</strong> Aplique perfumes e cremes antes dos acessórios.</li>
+                            <li><strong class="text-wine-950">• Longe de químicos:</strong> Evite produtos de limpeza e álcool.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-100 text-right">
+                    <button onclick="toggleCuidadosModal(false)" class="px-6 py-2.5 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold text-xs uppercase tracking-wider rounded-lg transition shadow">
+                        Entendi
                     </button>
                 </div>
 
@@ -354,7 +432,7 @@
                 <div class="p-6 bg-gray-50 border-t border-gray-200 space-y-4">
                     <div class="flex justify-between text-sm font-semibold text-gray-700">
                         <span>Subtotal</span>
-                        <span id="cart-subtotal" class="font-serif text-lg text-wine-900">R$ 0,00</span>
+                        <span id="cart-subtotal" class="font-serif text-lg text-wine-900">R\$ 0,00</span>
                     </div>
 
                     <div class="space-y-2">
@@ -371,10 +449,16 @@
     <!-- Footer -->
     <footer class="bg-wine-950 text-white border-t border-gold-500/30 pt-12 pb-8 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full border border-gold-500/60 p-0.5 bg-wine-900 flex items-center justify-center overflow-hidden">
-                        <img src="logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none';">
+                        <img src="logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden w-full h-full items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-full h-full text-white fill-current">
+                                <path d="M 32 45 C 28 35, 40 30, 52 42 L 68 70 M 60 28 L 40 68" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                            </svg>
+                        </div>
                     </div>
                     <span class="font-serif text-xl font-bold tracking-widest text-white">AURY</span>
                 </div>
@@ -382,32 +466,805 @@
                     Especialistas em semijoias de altíssima qualidade banhadas a Ouro 18k e Prata.
                 </p>
             </div>
+
+            <div>
+                <h4 class="font-serif text-lg font-semibold text-gold-500 mb-4">Navegação</h4>
+                <ul class="space-y-2 text-xs text-gray-300">
+                    <li><a href="#" class="hover:text-gold-500 transition">Início</a></li>
+                    <li><a href="#catalogo" class="hover:text-gold-500 transition">Coleções</a></li>
+                    <li><button onclick="toggleCuidadosModal(true)" class="hover:text-gold-500 transition text-left cursor-pointer">Como cuidar de suas peças</button></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg font-semibold text-gold-500 mb-4">Atendimento</h4>
+                <ul class="space-y-2 text-xs text-gray-300">
+                    <li class="flex items-center gap-2"><i class="fa-brands fa-whatsapp text-gold-500"></i> (91) 98409-9331</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg font-semibold text-gold-500 mb-4">Redes Sociais</h4>
+                <ul class="space-y-3 text-xs text-gray-300">
+                    <li>
+                        <a href="https://instagram.com/useauryjoias" target="_blank" class="inline-flex items-center gap-2 hover:text-gold-500 transition group">
+                            <span class="w-8 h-8 rounded-full bg-wine-900 border border-gold-500/30 flex items-center justify-center text-gold-500 group-hover:bg-gold-500 group-hover:text-wine-950 transition">
+                                <i class="fa-brands fa-instagram text-sm"></i>
+                            </span>
+                            <span class="font-medium text-gray-200 group-hover:text-gold-500 transition">@useauryjoias</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
+
         <div class="border-t border-wine-900 max-w-7xl mx-auto px-4 pt-6 text-center text-[11px] text-gray-500">
             © 2026 Aury Joias e Semijoias. Todos os direitos reservados.
         </div>
     </footer>
 
-    <!-- JavaScript Principal com Leitura do JSON do Decap CMS -->
+    <!-- JavaScript Principal -->
     <script>
         const numeroWhatsApp = "5591984099331";
-        
-        let products = [];
+        const SENHA_ADMIN = "aury2026";
+
+        const defaultProducts = [
+            // --- BRINCOS (1 a 24) ---
+            {
+                id: 501,
+                name: "Brinco Zircônia Quadrado 6x6mm",
+                category: "brincos",
+                price: 137.00,
+                image: "brincos/brinco1.jpg",
+                badge: "Lançamento",
+                description: "O deslumbrante Brinco Zircônia Quadrado 6x6mm combina geometria perfeita e alto brilho em um banho de ouro 18K impecável."
+            },
+            {
+                id: 502,
+                name: "Argola Cravejada",
+                category: "brincos",
+                price: 79.00,
+                image: "brincos/brinco2.jpg",
+                badge: "Mais Vendido",
+                description: "A clássica Argola Cravejada traz pedras zircônias reluzentes que proporcionam um toque sofisticado para qualquer ocasião."
+            },
+            {
+                id: 503,
+                name: "Argola Detalhe em Cruz",
+                category: "brincos",
+                price: 47.00,
+                image: "brincos/brinco3.jpg",
+                badge: "",
+                description: "A Argola Detalhe em Cruz une delicadeza e simbolismo em uma peça versátil com excelente acabamento."
+            },
+            {
+                id: 504,
+                name: "Argola Oval em Fecho 4mm",
+                category: "brincos",
+                price: 49.90,
+                image: "brincos/brinco4.jpg",
+                badge: "Destaque",
+                description: "A moderna Argola Oval em Fecho 4mm oferece conforto supremo e um design anatômico cheio de estilo."
+            },
+            {
+                id: 505,
+                name: "Brinco Chuva",
+                category: "brincos",
+                price: 49.90,
+                image: "brincos/brinco5.jpg",
+                badge: "",
+                description: "O Brinco Chuva destaca-se pelo caimento fluido de pedrarias que simulam gotas de luz cintilantes."
+            },
+            {
+                id: 506,
+                name: "Brinco Luz Quadrado",
+                category: "brincos",
+                price: 45.00,
+                image: "brincos/brinco6.jpg",
+                badge: "Novo",
+                description: "O Brinco Luz Quadrado ilumina o rosto com seu corte facetado exclusivo e banho de ouro 18K."
+            },
+            {
+                id: 507,
+                name: "Brinco Delicate",
+                category: "brincos",
+                price: 39.90,
+                image: "brincos/brinco7.jpg",
+                badge: "",
+                description: "O Brinco Delicate é a escolha perfeita para quem ama minimalismo refinado e elegância discreta."
+            },
+            {
+                id: 508,
+                name: "Brinco Aurora",
+                category: "brincos",
+                price: 53.90,
+                image: "brincos/brinco8.jpg",
+                badge: "",
+                description: "O Brinco Aurora irradia o brilho do amanhecer com suas zircônias cuidadosamente selecionadas."
+            },
+            {
+                id: 509,
+                name: "Argola Ping. Coração",
+                category: "brincos",
+                price: 39.90,
+                image: "brincos/brinco9.jpg",
+                badge: "Destaque",
+                description: "A romântica Argola Ping. Coração traz um charmoso pingente pendurado que se movimenta com leveza."
+            },
+            {
+                id: 510,
+                name: "Brinco Ponto de Luz em Fecho",
+                category: "brincos",
+                price: 32.90,
+                image: "brincos/brinco10.jpg",
+                badge: "",
+                description: "O prático e elegante Brinco Ponto de Luz em Fecho garante segurança e muito brilho diário."
+            },
+            {
+                id: 511,
+                name: "Brinco Coração Cravejado",
+                category: "brincos",
+                price: 39.90,
+                image: "brincos/brinco11.jpg",
+                badge: "",
+                description: "O Brinco Coração Cravejado transborda romantismo com microzircônias cravadas com precisão artesanal."
+            },
+            {
+                id: 512,
+                name: "Trio de Ponto de Luz Dourado",
+                category: "brincos",
+                price: 40.00,
+                image: "brincos/brinco12.jpg",
+                badge: "Novo",
+                description: "O versátil Trio de Ponto de Luz Dourado é ideal para compor um mix de orelha moderno e harmonioso."
+            },
+            {
+                id: 513,
+                name: "Trio Gota Dourado",
+                category: "brincos",
+                price: 42.00,
+                image: "brincos/brinco13.jpg",
+                badge: "",
+                description: "O elegante Trio Gota Dourado traz três tamanhos com lapidação em gota para produções sofisticadas."
+            },
+            {
+                id: 514,
+                name: "Trio em Prata",
+                category: "brincos",
+                price: 37.00,
+                image: "brincos/brinco14.jpg",
+                badge: "Luxo",
+                description: "O sofisticado Trio em Prata oferece o acabamento em ródio branco com três peças complementares incríveis."
+            },
+            {
+                id: 515,
+                name: "Argola Click Coração Cravejado",
+                category: "brincos",
+                price: 169.00,
+                image: "brincos/brinco15.jpg",
+                badge: "",
+                description: "A Argola Click Coração Cravejado une a facilidade do sistema click ao charme inconfundível de corações brilhantes."
+            },
+            {
+                id: 516,
+                name: "Argola Click Lisa",
+                category: "brincos",
+                price: 177.00,
+                image: "brincos/brinco16.jpg",
+                badge: "",
+                description: "A clássica Argola Click Lisa apresenta um polimento espelhado perfeito para composições do dia a dia."
+            },
+            {
+                id: 517,
+                name: "Argola Click Zirconia Quadrado",
+                category: "brincos",
+                price: 79.00,
+                image: "brincos/brinco17.jpg",
+                badge: "",
+                description: "A inovadora Argola Click Zirconia Quadrado traz pedras lapidadas em formato quadrado para um visual super contemporâneo."
+            },
+            {
+                id: 518,
+                name: "Argola Coração 36x42mm",
+                category: "brincos",
+                price: 187.00,
+                image: "brincos/brinco18.jpg",
+                badge: "",
+                description: "A marcante Argola Coração 36x42mm é uma peça de statement que garante presença e personalidade ao look."
+            },
+            {
+                id: 519,
+                name: "Argola Coração Liso 11mm",
+                category: "brincos",
+                price: 97.00,
+                image: "brincos/brinco19.jpg",
+                badge: "Fofo",
+                description: "A graciosa Argola Coração Liso 11mm é compacta, delicada e perfeita para um visual romântico e sutil."
+            },
+            {
+                id: 520,
+                name: "Argola Lisa 17mm",
+                category: "brincos",
+                price: 97.00,
+                image: "brincos/brinco20.jpg",
+                badge: "",
+                description: "A indispensável Argola Lisa 17mm é o curinga perfeito para qualquer porta-joias com banho em ouro 18K."
+            },
+            {
+                id: 521,
+                name: "Argola Lisa 21mm",
+                category: "brincos",
+                price: 137.00,
+                image: "brincos/brinco21.jpg",
+                badge: "",
+                description: "A elegante Argola Lisa 21mm possui o diâmetro ideal para destacar o rosto com sofisticação e leveza."
+            },
+            {
+                id: 522,
+                name: "Brinco Esferas Cravejadas",
+                category: "brincos",
+                price: 129.00,
+                image: "brincos/brinco22.jpg",
+                badge: "",
+                description: "O Brinco Esferas Cravejadas exibe texturas sofisticadas cobertas por microzircônias de alto padrão."
+            },
+            {
+                id: 523,
+                name: "Brinco Pérola em Ponto de Luz",
+                category: "brincos",
+                price: 187.00,
+                image: "brincos/brinco23.jpg",
+                badge: "",
+                description: "O clássico Brinco Pérola em Ponto de Luz une a atemporalidade da pérola ao brilho intenso de uma zircônia central."
+            },
+            {
+                id: 524,
+                name: "Brinco Três Gotas",
+                category: "brincos",
+                price: 187.00,
+                image: "brincos/brinco24.jpg",
+                badge: "Especial",
+                description: "O sofisticado Brinco Três Gotas traz um design em cascata com pedras em formato de gota para ocasiões especiais."
+            },
+
+            // --- GARGANTILHAS (1 a 10) ---
+            {
+                id: 401,
+                name: "Gargantilha Crucifixo Com Coração Cravejado Folheado a Ouro 18k",
+                category: "gargantilhas",
+                price: 267.00,
+                image: "gargantilhas/gargantilha1.jpg",
+                badge: "Novo",
+                description: "A emocionante Gargantilha Crucifixo Com Coração Cravejado Folheado a Ouro 18k une fé e delicadeza em uma joia deslumbrante."
+            },
+            {
+                id: 402,
+                name: "Gargantilha Retangular Cravejado Cruz Folheada a Ouro 18k",
+                category: "gargantilhas",
+                price: 247.00,
+                image: "gargantilhas/gargantilha2.jpg",
+                badge: "",
+                description: "A moderna Gargantilha Retangular Cravejado Cruz Folheada a Ouro 18k destaca-se pelo design geométrico repleto de brilho."
+            },
+            {
+                id: 403,
+                name: "Gargantilha Três Gotas Zircônias Folheada a Ouro 18k",
+                category: "gargantilhas",
+                price: 237.00,
+                image: "gargantilhas/gargantilha3.jpg",
+                badge: "Destaque",
+                description: "A iluminada Gargantilha Três Gotas Zircônias Folheada a Ouro 18k possui um caimento perfeito que valoriza o colo."
+            },
+            {
+                id: 404,
+                name: "Gargantilha Quadrado Liso Ponto de Luz Folheado a Ouro 18k",
+                category: "gargantilhas",
+                price: 267.00,
+                image: "gargantilhas/gargantilha4.jpg",
+                badge: "",
+                description: "A elegante Gargantilha Quadrado Liso Ponto de Luz Folheado a Ouro 18k combina formas limpas com um ponto central reluzente."
+            },
+            {
+                id: 405,
+                name: "Gargantilha Pedra Retangular Coração Cravejado Folheado a Ouro 18k",
+                category: "gargantilhas",
+                price: 289.00,
+                image: "gargantilhas/gargantilha5.jpg",
+                badge: "",
+                description: "A charmosa Gargantilha Pedra Retangular Coração Cravejado Folheado a Ouro 18k exala romantismo e sofisticação pura."
+            },
+            {
+                id: 406,
+                name: "Gargantilha Pérola Shell Folheada a Ouro 18k",
+                category: "gargantilhas",
+                price: 199.00,
+                image: "gargantilhas/gargantilha6.jpg",
+                badge: "Mais Vendido",
+                description: "A atemporal Gargantilha Pérola Shell Folheada a Ouro 18k traz toda a classe e o brilho leitoso da pérola."
+            },
+            {
+                id: 407,
+                name: "Gargantilha Ponto de Luz Plaquinha Cravejada e Lisa Folheada a Ouro 18k",
+                category: "gargantilhas",
+                price: 387.00,
+                image: "gargantilhas/gargantilha7.jpg",
+                badge: "",
+                description: "A luxuosa Gargantilha Ponto de Luz Plaquinha Cravejada e Lisa Folheada a Ouro 18k é uma verdadeira obra de arte para o seu visual."
+            },
+            {
+                id: 408,
+                name: "Gargantilha Nossa Senhora de Nazaré Com Zircônia Folheada a Ouro 18k",
+                category: "gargantilhas",
+                price: 199.00,
+                image: "gargantilhas/gargantilha8.jpg",
+                badge: "",
+                description: "A devota e sofisticada Gargantilha Nossa Senhora de Nazaré Com Zircônia Folheada a Ouro 18k carrega proteção e beleza."
+            },
+            {
+                id: 409,
+                name: "Gargantilha Menino e Coração Com Pedras de Zircônia Folheada a Ouro 18k",
+                category: "gargantilhas",
+                price: 187.00,
+                image: "gargantilhas/gargantilha9.jpg",
+                badge: "",
+                description: "A afetuosa Gargantilha Menino e Coração Com Pedras de Zircônia Folheada a Ouro 18k celebra o amor familiar com muito estilo."
+            },
+            {
+                id: 410,
+                name: "Gargantilha Coração Menina Com Zircônias Folheada a Ouro 18k",
+                category: "gargantilhas",
+                price: 197.00,
+                image: "gargantilhas/gargantilha10.jpg",
+                badge: "",
+                description: "A delicada Gargantilha Coração Menina Com Zircônias Folheada a Ouro 18k é perfeita para carregar quem você ama sempre perto."
+            },
+            // --- ESCAPULÁRIOS ---
+            {
+                id: 301,
+                name: "Escapulário Sagrado Ouro 18K 1",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario1.jpg",
+                badge: "Novo",
+                description: "O protetor Escapulário Sagrado Ouro 18K 1 traz o equilíbrio perfeito entre fé e sofisticação diária."
+            },
+            {
+                id: 302,
+                name: "Escapulário Sagrado Ouro 18K 2",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario2.jpg",
+                badge: "",
+                description: "O elegante Escapulário Sagrado Ouro 18K 2 é uma peça indispensável para quem busca carregar espiritualidade com luxo."
+            },
+            {
+                id: 303,
+                name: "Escapulário Sagrado Ouro 18K 3",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario3.jpg",
+                badge: "Destaque",
+                description: "O tradicional Escapulário Sagrado Ouro 18K 3 apresenta acabamento impecável e alta durabilidade."
+            },
+            {
+                id: 304,
+                name: "Escapulário Sagrado Ouro 18K 4",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario4.jpg",
+                badge: "",
+                description: "O gracioso Escapulário Sagrado Ouro 18K 4 une tradição e brilho em uma corrente leve e confortável."
+            },
+            {
+                id: 305,
+                name: "Escapulário Sagrado Ouro 18K 5",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario5.jpg",
+                badge: "",
+                description: "O belíssimo Escapulário Sagrado Ouro 18K 5 destaca-se pelo banho de ouro 18K de altíssima qualidade."
+            },
+            {
+                id: 306,
+                name: "Escapulário Sagrado Ouro 18K 6",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario6.jpg",
+                badge: "Mais Vendido",
+                description: "O consagrado Escapulário Sagrado Ouro 18K 6 é a escolha favorita para presentear com significado e elegância."
+            },
+            {
+                id: 307,
+                name: "Escapulário Sagrado Ouro 18K 7",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario7.jpg",
+                badge: "",
+                description: "O exclusivo Escapulário Sagrado Ouro 18K 7 completa o seu mix de colares com um toque sagrado e requintado."
+            },
+            // --- CONJUNTOS ---
+            {
+                id: 1,
+                name: "Conjunto Laços",
+                category: "conjuntos",
+                price: 92.00,
+                image: "conjuntos/conjunto1.jpg",
+                badge: "Destaque",
+                description: "O harmonioso Conjunto Laços traz peças perfeitamente combinadas com o formato romântico de laço banhado a ouro 18K."
+            },
+            {
+                id: 2,
+                name: "Conjunto Aurora",
+                category: "conjuntos",
+                price: 99.00,
+                image: "conjuntos/conjunto2.jpg",
+                badge: "Novo",
+                description: "O deslumbrante Conjunto Aurora reflete a luz da manhã em brincos e colar coordenados com puro brilho."
+            },
+            {
+                id: 4,
+                name: "Conjunto Luz",
+                category: "conjuntos",
+                price: 99.00,
+                image: "conjuntos/conjunto4.jpg",
+                badge: "",
+                description: "O radiante Conjunto Luz foi criado para iluminar suas produções com pedrarias cravejadas de alta precisão."
+            },
+            {
+                id: 5,
+                name: "Conjunto Lumiere",
+                category: "conjuntos",
+                price: 97.00,
+                image: "conjuntos/conjunto5.jpg",
+                badge: "",
+                description: "O sofisticado Conjunto Lumiere exala o charme francês em um design clássico e reluzente."
+            },
+            {
+                id: 6,
+                name: "Conjunto Encanto",
+                category: "conjuntos",
+                price: 99.00,
+                image: "conjuntos/conjunto6.jpg",
+                badge: "Mais Vendido",
+                description: "O apaixonante Conjunto Encanto conquista olhares pela harmonia perfeita entre suas joias."
+            },
+            {
+                id: 7,
+                name: "Conjunto Amore",
+                category: "conjuntos",
+                price: 97.00,
+                image: "conjuntos/conjunto7.jpg",
+                badge: "",
+                description: "O delicado Conjunto Amore traduz o sentimento de carinho em formas suaves e acabamento impecável."
+            },
+            {
+                id: 8,
+                name: "Conjunto Imperiale",
+                category: "conjuntos",
+                price: 99.00,
+                image: "conjuntos/conjunto8.jpg",
+                badge: "",
+                description: "O majestoso Conjunto Imperiale oferece imponência e elegância incomparáveis para mulheres marcantes."
+            },
+            {
+                id: 9,
+                name: "Conjunto Majestic",
+                category: "conjuntos",
+                price: 99.00,
+                image: "conjuntos/conjunto9.jpg",
+                badge: "",
+                description: "O elegante Conjunto Majestic destaca-se pelo alto luxo e design requintado banhado a ouro 18K."
+            },
+            {
+                id: 10,
+                name: "Conjunto ponto de luz",
+                category: "conjuntos",
+                price: 95.00,
+                image: "conjuntos/conjunto10.jpg",
+                badge: "",
+                description: "O versátil Conjunto ponto de luz garante o brilho essencial que não pode faltar no seu porta-joias."
+            },
+            {
+                id: 11,
+                name: "Conjunto Divine",
+                category: "conjuntos",
+                price: 99.00,
+                image: "conjuntos/conjunto11.jpg",
+                badge: "",
+                description: "O sublime Conjunto Divine eleva qualquer visual com pedras cintilantes e sofisticação inconfundível."
+            },
+            {
+                id: 12,
+                name: "Conjunto Dolce Vita",
+                category: "conjuntos",
+                price: 97.00,
+                image: "conjuntos/conjunto12.jpg",
+                badge: "",
+                description: "O charmoso Conjunto Dolce Vita inspira leveza, alegria e muito estilo em uma combinação perfeita."
+            },
+            {
+                id: 13,
+                name: "Conjunto Pérola G",
+                category: "conjuntos",
+                price: 79.90,
+                image: "conjuntos/conjunto13.jpg",
+                badge: "",
+                description: "O clássico Conjunto Pérola G traz pérolas grandes selecionadas para um visual de extrema elegância."
+            },
+            {
+                id: 14,
+                name: "Conjunto Pérola R",
+                category: "conjuntos",
+                price: 79.90,
+                image: "conjuntos/conjunto14.jpg",
+                badge: "",
+                description: "O delicado Conjunto Pérola R combina o romantismo das pérolas com o brilho duradouro do banho de ouro 18K."
+            },
+            {
+                id: 15,
+                name: "Conjunto Luzes",
+                category: "conjuntos",
+                price: 95.00,
+                image: "conjuntos/conjunto15.jpg",
+                badge: "",
+                description: "O brilhante Conjunto Luzes foi desenvolvido para destacar a sua beleza natural com múltiplos pontos de luz."
+            },
+            {
+                id: 16,
+                name: "Conjunto Valentina",
+                category: "conjuntos",
+                price: 99.00,
+                image: "conjuntos/conjunto16.jpg",
+                badge: "",
+                description: "O sofisticado Conjunto Valentina une modernidade e feminilidade em peças coordenadas de tirar o fôlego."
+            },
+            // --- ANÉIS ---
+            {
+                id: 101,
+                name: "Anel nossa Senhora",
+                category: "aneis",
+                price: 49.90,
+                image: "aneis/anel1.jpg",
+                badge: "Novo",
+                description: "O devoto Anel nossa Senhora protege e embeleza suas mãos com um acabamento delicado em ouro 18K."
+            },
+            {
+                id: 102,
+                name: "Anel fio duplo cravejados",
+                category: "aneis",
+                price: 49.90,
+                image: "aneis/anel2.jpg",
+                badge: "",
+                description: "O moderno Anel fio duplo cravejados traz duas linhas repletas de zircônias para um efeito visual marcante."
+            },
+            {
+                id: 103,
+                name: "Anel prego",
+                category: "aneis",
+                price: 49.90,
+                image: "aneis/anel3.jpg",
+                badge: "",
+                description: "O estiloso Anel prego traduz a alta joalheria moderna em uma semijoia cheia de personalidade e atitude."
+            },
+            {
+                id: 104,
+                name: "Ael D'luxo Ponto de Luz",
+                category: "aneis",
+                price: 85.90,
+                image: "aneis/anel4.jpg",
+                badge: "Destaque",
+                description: "O sofisticado Ael D'luxo Ponto de Luz destaca um solitário central de brilho intenso nas suas mãos."
+            },
+            {
+                id: 105,
+                name: "Anel ondas cravejadas",
+                category: "aneis",
+                price: 79.90,
+                image: "aneis/anel5.jpg",
+                badge: "",
+                description: "O fluido Anel ondas cravejadas imita o movimento delicado das ondas do mar com pedras reluzentes."
+            },
+            {
+                id: 106,
+                name: "Anel Elegance Pedra Branca",
+                category: "aneis",
+                price: 79.90,
+                image: "aneis/anel6.jpg",
+                badge: "",
+                description: "O refinado Anel Elegance Pedra Branca aposta na pureza e no corte clássico de sua pedra central."
+            },
+            {
+                id: 107,
+                name: "Anel Aparador",
+                category: "aneis",
+                price: 187.00,
+                image: "aneis/anel7.jpg",
+                badge: "",
+                description: "O versátil Anel Aparador é perfeito para combinar com alianças ou ser usado sozinho em um mix elegante."
+            },
+            {
+                id: 108,
+                name: "Anel Solitário",
+                category: "aneis",
+                price: 227.00,
+                image: "aneis/anel8.jpg",
+                badge: "",
+                description: "O tradicional Anel Solitário exalta a beleza minimalista de uma gema central de alto impacto."
+            },
+            {
+                id: 109,
+                name: "Anel Solitário",
+                category: "aneis",
+                price: 227.00,
+                image: "aneis/anel9.jpg",
+                badge: "",
+                description: "O elegante Anel Solitário traz um design gracioso que simboliza elegância e romantismo eterno."
+            },
+            {
+                id: 110,
+                name: "Anel Pedra Única",
+                category: "aneis",
+                price: 399.00,
+                image: "aneis/anel10.jpg",
+                badge: "",
+                description: "O imponente Anel Pedra Única chama atenção pela grandiosidade e brilho absoluto de sua pedra principal."
+            },
+            {
+                id: 111,
+                name: "Anel Pérola",
+                category: "aneis",
+                price: 229.00,
+                image: "aneis/anel11.jpg",
+                badge: "",
+                description: "O clássico Anel Pérola confere um toque de sofisticação vintage e muita classe às suas mãos."
+            },
+            {
+                id: 112,
+                name: "Anel Quatro Voltas",
+                category: "aneis",
+                price: 297.00,
+                image: "aneis/anel12.jpg",
+                badge: "",
+                description: "O robusto e moderno Anel Quatro Voltas cria um efeito de mix de anéis em uma única peça luxuosa."
+            },
+            {
+                id: 113,
+                name: "Anel Liz",
+                category: "aneis",
+                price: 19.00,
+                image: "aneis/anel13.jpg",
+                badge: "",
+                description: "O delicado Anel Liz é leve, gracioso e perfeito para compor mix de anéis minimalistas no dia a dia."
+            },
+            // --- PULSEIRAS E BRACELETES ---
+            {
+                id: 201,
+                name: "Bracelete faixa tripla cravejada ban - Dourado cristal",
+                category: "pulseiras",
+                price: 210.00,
+                image: "pulseiras/pulseira1.jpg",
+                badge: "Novo",
+                description: "O marcante Bracelete faixa tripla cravejada ban - Dourado cristal veste o pulso com imponência e brilho tridimensional."
+            },
+            {
+                id: 202,
+                name: "Bracelete duo spikes com linha central ban. Dourado cristal",
+                category: "pulseiras",
+                price: 170.00,
+                image: "pulseiras/pulseira2.jpg",
+                badge: "",
+                description: "O ousado Bracelete duo spikes com linha central ban. Dourado cristal une atitude e elegância em uma peça única."
+            },
+            {
+                id: 203,
+                name: "Bracelete zircônia central oval ban. Dourado",
+                category: "pulseiras",
+                price: 195.00,
+                image: "pulseiras/pulseira3.jpg",
+                badge: "",
+                description: "O sofisticado Bracelete zircônia central oval ban. Dourado destaca uma gema oval deslumbrante no centro do pulso."
+            },
+            {
+                id: 204,
+                name: "Bracelete linhas entrelaçadas com pontos de luz ban. Dourado cristal",
+                category: "pulseiras",
+                price: 170.00,
+                image: "pulseiras/pulseira4.jpg",
+                badge: "Destaque",
+                description: "O elegante Bracelete linhas entrelaçadas com pontos de luz ban. Dourado cristal simboliza união e delicadeza em ouro 18K."
+            },
+            {
+                id: 205,
+                name: "Bracelete duo line com pontos de luz ban. Dourado cristal",
+                category: "pulseiras",
+                price: 170.00,
+                image: "pulseiras/pulseira5.jpg",
+                badge: "",
+                description: "O moderno Bracelete duo line com pontos de luz ban. Dourado cristal traz linhas duplas repletas de cristais brilhantes."
+            },
+            {
+                id: 206,
+                name: "Bracelete ondas duplas cravejadas ban. Dourado cristal",
+                category: "pulseiras",
+                price: 170.00,
+                image: "pulseiras/pulseira6.jpg",
+                badge: "",
+                description: "O fluido Bracelete ondas duplas cravejadas ban. Dourado cristal envolve o pulso com curvas sinuosas e muito brilho."
+            },
+            {
+                id: 207,
+                name: "Bracelete riviera line ban. Dourado cristal",
+                category: "pulseiras",
+                price: 160.00,
+                image: "pulseiras/pulseira7.jpg",
+                badge: "",
+                description: "O clássico Bracelete riviera line ban. Dourado cristal oferece uma linha contínua de zircônias de altíssimo padrão."
+            },
+            {
+                id: 208,
+                name: "Bracelete luxo serpente cravejada detalhe cabeça ban. Ródio branco rosa",
+                category: "pulseiras",
+                price: 360.00,
+                image: "pulseiras/pulseira8.jpg",
+                badge: "",
+                description: "O luxuoso Bracelete luxo serpente cravejada detalhe cabeça ban. Ródio branco rosa impressiona pelo design exótico e rico em detalhes."
+            },
+            {
+                id: 209,
+                name: "Pulseira corações lisos e cravejados folheada a ouro 18k",
+                category: "pulseiras",
+                price: 747.00,
+                image: "pulseiras/pulseira9.jpg",
+                badge: "",
+                description: "A apaixonante Pulseira corações lisos e cravejados folheada a ouro 18k alterna texturas românticas para um visual inesquecível."
+            },
+            {
+                id: 210,
+                name: "Pulseira corações vazados folheados a ouro 18k",
+                category: "pulseiras",
+                price: 247.00,
+                image: "pulseiras/pulseira10.jpg",
+                badge: "",
+                description: "A delicada Pulseira corações vazados folheados a ouro 18k traz leveza e muito charme ao seu pulso."
+            },
+            {
+                id: 211,
+                name: "Pulseira malha fina diamantada lisa folheada a ouro 18k",
+                category: "pulseiras",
+                price: 257.00,
+                image: "pulseiras/pulseira11.jpg",
+                badge: "",
+                description: "A brilhante Pulseira malha fina diamantada lisa folheada a ouro 18k reflete a luz com seu acabamento diamantado exclusivo."
+            },
+            {
+                id: 212,
+                name: "Pulseira pérola amassada folheada a ouro 18k",
+                category: "pulseiras",
+                price: 227.00,
+                image: "pulseiras/pulseira12.jpg",
+                badge: "",
+                description: "A contemporânea Pulseira pérola amassada folheada a ouro 18k mistura a sofisticação da pérola com formas orgânicas modernas."
+            },
+            {
+                id: 213,
+                name: "Pulseira cruz cravejada",
+                category: "pulseiras",
+                price: 229.00,
+                image: "pulseiras/pulseira13.jpg",
+                badge: "",
+                description: "A abençoada Pulseira cruz cravejada combina proteção espiritual e pedrarias cintilantes em uma única joia."
+            }
+        ];
+
+        let storedProducts = localStorage.getItem('aury_products');
+        let products = storedProducts ? JSON.parse(storedProducts) : defaultProducts;
+
         let cart = [];
         let wishlist = [];
 
-        // Função para carregar os produtos do arquivo JSON gerado pelo Decap CMS
-        async function carregarProdutos() {
-            try {
-                const response = await fetch('produtos.json');
-                const data = await response.json();
-                products = data.items || [];
-                renderProducts(products);
-            } catch (error) {
-                console.log("Erro ao carregar produtos do CMS.", error);
-                products = [];
-                renderProducts(products);
-            }
+        function saveProductsToStorage() {
+            localStorage.setItem('aury_products', JSON.stringify(products));
         }
 
         function renderProducts(items) {
@@ -415,11 +1272,11 @@
             if (!grid) return;
             grid.innerHTML = '';
 
-            if (!items || items.length === 0) {
+            if (items.length === 0) {
                 grid.innerHTML = `
                     <div class="col-span-full text-center py-12">
                         <i class="fa-solid fa-gem text-4xl text-gray-300 mb-3"></i>
-                        <p class="text-gray-500 font-medium">Nenhuma joia encontrada. Acesse a <a href="admin/index.html" class="text-wine-900 underline font-bold">Área Administrativa</a> para cadastrar produtos.</p>
+                        <p class="text-gray-500 font-medium">Nenhuma joia encontrada nesta categoria.</p>
                     </div>
                 `;
                 return;
@@ -471,16 +1328,116 @@
             });
         }
 
-        function toggleSobreModal(open) {
-            const modal = document.getElementById('sobre-modal');
-            if (open) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
+        function pedirSenhaAdmin() {
+            const senhaDigitada = prompt("Área restrita da Aury Semijoias.\nDigite a sua senha de administradora:");
+            if (senhaDigitada === SENHA_ADMIN) {
+                toggleAdminModal(true);
+            } else if (senhaDigitada !== null) {
+                alert("Senha incorreta! Acesso negado.");
+            }
         }
 
         function toggleBrindeModal(open) {
             const modal = document.getElementById('brinde-modal');
             if (open) modal.classList.remove('hidden');
             else modal.classList.add('hidden');
+        }
+
+        function toggleAdminModal(open) {
+            const modal = document.getElementById('admin-modal');
+            if (open) {
+                renderAdminList();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function toggleCuidadosModal(open) {
+            const modal = document.getElementById('cuidados-modal');
+            if (open) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('prod-name').value;
+            const category = document.getElementById('prod-cat').value;
+            const badge = document.getElementById('prod-badge').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const description = document.getElementById('prod-desc').value;
+            const imageFile = document.getElementById('prod-image-file').files[0];
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageUrl = e.target.result;
+                    addProductToStore(name, category, badge, price, imageUrl, description);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                alert('Por favor, selecione uma foto do produto no seu computador.');
+            }
+        }
+
+        function addProductToStore(name, category, badge, price, image, description) {
+            const newProduct = {
+                id: Date.now(),
+                name,
+                category,
+                badge,
+                price,
+                image,
+                description
+            };
+
+            products.push(newProduct);
+            saveProductsToStorage();
+            renderProducts(products);
+            renderAdminList();
+            resetForm();
+
+            alert('Produto cadastrado com sucesso!');
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Tem certeza que deseja excluir esta joia do catálogo?")) {
+                products = products.filter(p => p.id !== id);
+                saveProductsToStorage();
+                renderProducts(products);
+                renderAdminList();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-id').value = '';
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-products-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (products.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 text-center py-2">Nenhum produto cadastrado.</p>`;
+                return;
+            }
+
+            products.forEach(p => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border border-gray-200">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <img src="${p.image}" class="w-8 h-8 object-cover rounded" onerror="this.src='https://via.placeholder.com/40'">
+                            <span class="font-medium text-gray-800 truncate">${p.name}</span>
+                        </div>
+                        <button onclick="deleteProduct(${p.id})" class="px-2.5 py-1.5 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[11px] flex items-center gap-1">
+                            <i class="fa-solid fa-trash-can"></i> Excluir
+                        </button>
+                    </div>
+                `;
+            });
         }
 
         function openQuickView(productId) {
@@ -608,8 +1565,11 @@
             window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // Executa a carga dos produtos do JSON do CMS ao abrir a página
-        carregarProdutos();
+        // Limpa o cache antigo do navegador para carregar as alterações
+        localStorage.removeItem('aury_products');
+
+        // Carrega os produtos na tela ao iniciar
+        renderProducts(products);
     </script>
 </body>
 </html>
