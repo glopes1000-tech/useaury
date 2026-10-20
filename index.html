@@ -13,13 +13,44 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- CONFIGURAÇÃO DAS CORES DO TAILWIND -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wine: {
+                            50: '#fdf2f4',
+                            100: '#fbe5e8',
+                            200: '#f7ced5',
+                            600: '#7a1221',
+                            800: '#4a0e17',
+                            900: '#32060c',
+                            950: '#210408',
+                        },
+                        gold: {
+                            300: '#f6e05e',
+                            400: '#ecc94b',
+                            500: '#d4af37',
+                            600: '#b78a28',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <!-- Firebase SDKs (v10 Modular via CDN) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        // As tuas chaves do Firebase obtidas no console
+        // As tuas chaves do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDukseSNCAM7IyMPeKswXaD9Ruj2F3p4Zk",
             authDomain: "aury-semijoias.firebaseapp.com",
@@ -38,8 +69,141 @@
         const SENHA_ADMIN = "aury2026";
 
         let products = [];
+        let categories = [];
         let cart = [];
         let wishlist = [];
+
+        // Categorias Padrão (caso o banco esteja vazio)
+        const defaultCategories = [
+            { id: 'aneis', name: 'Anéis' },
+            { id: 'gargantilhas', name: 'Gargantilhas' },
+            { id: 'brincos', name: 'Brincos' },
+            { id: 'pulseiras', name: 'Pulseiras' },
+            { id: 'escapularios', name: 'Escapulários' },
+            { id: 'conjuntos', name: 'Conjuntos' }
+        ];
+
+        // Carregar categorias do Firestore
+        window.loadCategoriesFromFirebase = async function() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "categories"));
+                categories = [];
+                querySnapshot.forEach((docSnap) => {
+                    categories.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Se não houver categorias no banco, inicializa com as padrão
+                if (categories.length === 0) {
+                    for (const cat of defaultCategories) {
+                        await setDoc(doc(db, "categories", cat.id), { name: cat.name });
+                    }
+                    categories = [...defaultCategories];
+                }
+
+                renderCategoryUI();
+            } catch (error) {
+                console.error("Erro ao carregar categorias:", error);
+                categories = [...defaultCategories];
+                renderCategoryUI();
+            }
+        };
+
+        // Cadastrar nova categoria
+        window.saveCategoryToFirebase = async function(event) {
+            event.preventDefault();
+            const catNameInput = document.getElementById('cat-name');
+            const name = catNameInput.value.trim();
+
+            if (!name) return;
+
+            // Criar ID amigável (slug)
+            const id = name.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]/g, '-');
+
+            try {
+                await setDoc(doc(db, "categories", id), { name });
+                alert(`Categoria "${name}" cadastrada com sucesso!`);
+                catNameInput.value = '';
+                await loadCategoriesFromFirebase();
+                renderAdminCategoryList();
+            } catch (error) {
+                console.error("Erro ao salvar categoria:", error);
+                alert("Erro ao cadastrar categoria.");
+            }
+        };
+
+        // Excluir categoria
+        window.deleteCategoryFromFirebase = async function(id) {
+            if (confirm("Tem certeza que deseja excluir esta categoria? Os produtos vinculados a ela não serão apagados.")) {
+                try {
+                    await deleteDoc(doc(db, "categories", id));
+                    alert("Categoria excluída com sucesso!");
+                    await loadCategoriesFromFirebase();
+                    renderAdminCategoryList();
+                } catch (error) {
+                    console.error("Erro ao excluir categoria:", error);
+                    alert("Erro ao excluir categoria.");
+                }
+            }
+        };
+
+        // Atualizar todas as interfaces de categoria
+        window.renderCategoryUI = function() {
+            // 1. Atualizar Menu de Navegação Superior
+            const navMenu = document.getElementById('nav-categories');
+            if (navMenu) {
+                navMenu.innerHTML = `<button onclick="filterCategory('todos')" class="nav-link text-white hover:text-gold-500 transition py-2 border-b-2 border-transparent hover:border-gold-500">Início</button>`;
+                categories.forEach(cat => {
+                    navMenu.innerHTML += `
+                        <button onclick="filterCategory('${cat.id}')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">${cat.name}</button>
+                    `;
+                });
+            }
+
+            // 2. Atualizar Botões de Filtro do Catálogo
+            const filterContainer = document.getElementById('category-filters');
+            if (filterContainer) {
+                filterContainer.innerHTML = `<button onclick="filterCategory('todos')" class="btn-cat active px-4 py-1.5 rounded-full text-xs font-semibold bg-wine-900 text-gold-500 shadow-sm transition">Todos</button>`;
+                categories.forEach(cat => {
+                    filterContainer.innerHTML += `
+                        <button onclick="filterCategory('${cat.id}')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">${cat.name}</button>
+                    `;
+                });
+            }
+
+            // 3. Atualizar Select no Formulário de Produto
+            const selectCat = document.getElementById('prod-cat');
+            if (selectCat) {
+                selectCat.innerHTML = '';
+                categories.forEach(cat => {
+                    selectCat.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                });
+            }
+        };
+
+        // Renderizar lista de categorias no modal Admin
+        window.renderAdminCategoryList = function() {
+            const list = document.getElementById('admin-categories-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (categories.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 text-center py-2">Nenhuma categoria cadastrada.</p>`;
+                return;
+            }
+
+            categories.forEach(c => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-gray-50 p-2 rounded-lg border border-gray-200">
+                        <span class="font-medium text-gray-800">${c.name}</span>
+                        <button onclick="deleteCategoryFromFirebase('${c.id}')" class="px-2 py-1 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[10px]">
+                            <i class="fa-solid fa-trash-can"></i> Excluir
+                        </button>
+                    </div>
+                `;
+            });
+        };
 
         // Carregar produtos do Firestore
         window.loadProductsFromFirebase = async function() {
@@ -128,6 +292,7 @@
             const modal = document.getElementById('admin-modal');
             if (open) {
                 renderAdminList();
+                renderAdminCategoryList();
                 modal.classList.remove('hidden');
             } else {
                 modal.classList.add('hidden');
@@ -145,13 +310,19 @@
             }
 
             products.forEach(p => {
+                const catObj = categories.find(c => c.id === p.category);
+                const catName = catObj ? catObj.name : p.category;
+
                 list.innerHTML += `
                     <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border border-gray-200">
                         <div class="flex items-center gap-2 overflow-hidden">
                             <img src="${p.image}" class="w-8 h-8 object-cover rounded" onerror="this.src='https://via.placeholder.com/40'">
-                            <span class="font-medium text-gray-800 truncate">${p.name}</span>
+                            <div class="flex flex-col truncate">
+                                <span class="font-medium text-gray-800 truncate text-xs">${p.name}</span>
+                                <span class="text-[10px] text-gray-400">${catName}</span>
+                            </div>
                         </div>
-                        <button onclick="deleteProductFromFirebase('${p.id}')" class="px-2.5 py-1.5 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[11px] flex items-center gap-1">
+                        <button onclick="deleteProductFromFirebase('${p.id}')" class="px-2.5 py-1.5 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[11px] flex items-center gap-1 shrink-0">
                             <i class="fa-solid fa-trash-can"></i> Excluir
                         </button>
                     </div>
@@ -178,6 +349,8 @@
                 const isFavorite = wishlist.includes(product.id);
                 const badgeHTML = product.badge ? `<span class="absolute top-3 left-3 z-10 bg-wine-900 text-gold-500 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border border-gold-500/30">${product.badge}</span>` : '';
                 const msgWhats = encodeURIComponent(`Olá! Gostaria de comprar ou tirar dúvidas sobre o produto: ${product.name} (R$ ${Number(product.price).toFixed(2).replace('.', ',')})`);
+                const catObj = categories.find(c => c.id === product.category);
+                const catName = catObj ? catObj.name : product.category;
 
                 grid.innerHTML += `
                     <div class="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
@@ -193,7 +366,7 @@
                         </div>
                         <div class="p-5 flex-grow flex flex-col justify-between space-y-3">
                             <div>
-                                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">${product.category}</span>
+                                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">${catName}</span>
                                 <h3 class="font-serif text-lg font-bold text-gray-900 group-hover:text-wine-900 transition line-clamp-1">${product.name}</h3>
                             </div>
                             <div class="flex items-baseline gap-2">
@@ -218,8 +391,10 @@
                 btn.classList.remove('bg-wine-900', 'text-gold-500');
                 btn.classList.add('bg-gray-200', 'text-gray-700');
             });
-            event.target.classList.remove('bg-gray-200', 'text-gray-700');
-            event.target.classList.add('bg-wine-900', 'text-gold-500');
+            if (event && event.target) {
+                event.target.classList.remove('bg-gray-200', 'text-gray-700');
+                event.target.classList.add('bg-wine-900', 'text-gold-500');
+            }
 
             if (cat === 'todos') renderProducts(products);
             else renderProducts(products.filter(p => p.category === cat));
@@ -233,6 +408,8 @@
         window.openQuickView = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
+            const catObj = categories.find(c => c.id === product.category);
+            const catName = catObj ? catObj.name : product.category;
             const msgWhats = encodeURIComponent(`Olá! Gostaria de comprar ou tirar dúvidas sobre o produto: ${product.name} (R$ ${Number(product.price).toFixed(2).replace('.', ',')})`);
             const content = document.getElementById('quick-view-content');
             content.innerHTML = `
@@ -240,7 +417,7 @@
                     <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
                 </div>
                 <div class="space-y-4 text-left">
-                    <span class="text-[10px] bg-wine-50 text-wine-900 px-2.5 py-1 rounded-full uppercase tracking-widest font-bold border border-wine-200">${product.category}</span>
+                    <span class="text-[10px] bg-wine-50 text-wine-900 px-2.5 py-1 rounded-full uppercase tracking-widest font-bold border border-wine-200">${catName}</span>
                     <h2 class="font-serif text-2xl font-bold text-wine-950">${product.name}</h2>
                     <div class="flex items-baseline gap-3">
                         <span class="text-2xl font-bold text-wine-900 font-serif">R$ ${Number(product.price).toFixed(2).replace('.', ',')}</span>
@@ -348,8 +525,9 @@
             window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadProductsFromFirebase();
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadCategoriesFromFirebase();
+            await loadProductsFromFirebase();
         });
     </script>
 
@@ -361,18 +539,18 @@
 </head>
 <body class="bg-gray-50 font-sans text-gray-800 antialiased flex flex-col min-h-screen">
 
-    <!-- Top Announcement Bar -->
+    <!-- Barra Superior de Oferta -->
     <div onclick="toggleBrindeModal(true)" class="bg-gradient-to-r from-wine-950 via-wine-900 to-wine-950 text-gold-400 text-xs py-2.5 px-4 text-center font-medium border-b border-gold-500/20 tracking-wide flex items-center justify-center gap-2 shadow-inner cursor-pointer hover:text-white transition">
         <i class="fa-solid fa-gift text-gold-500 animate-pulse"></i>
         <span>Nas compras a partir de <strong>R\$ 189,90</strong>, você recebe um presente exclusivo Aury! <span class="underline ml-1 font-semibold text-gold-300">Ver Presente</span></span>
     </div>
 
-    <!-- Header / Navigation -->
+    <!-- Cabeçalho -->
     <header class="sticky top-0 z-40 bg-wine-900 border-b border-gold-500/30 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
-                <!-- Logo / Admin Trigger -->
+                <!-- Logo e Acesso Admin -->
                 <button onclick="pedirSenhaAdmin()" class="flex items-center gap-3 group text-left cursor-pointer bg-transparent border-0 p-0 focus:outline-none" title="Área Restrita - Donas da Aury">
                     <div class="w-12 h-12 rounded-full overflow-hidden border border-gold-500/60 p-1 bg-wine-950 shadow-md flex items-center justify-center">
                         <img src="logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -388,18 +566,11 @@
                     </div>
                 </button>
 
-                <!-- Navigation -->
-                <nav class="hidden md:flex items-center space-x-5 text-sm font-medium tracking-wide">
-                    <button onclick="filterCategory('todos')" class="nav-link text-white hover:text-gold-500 transition py-2 border-b-2 border-transparent hover:border-gold-500">Início</button>
-                    <button onclick="filterCategory('aneis')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Anéis</button>
-                    <button onclick="filterCategory('gargantilhas')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Gargantilhas</button>
-                    <button onclick="filterCategory('brincos')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Brincos</button>
-                    <button onclick="filterCategory('pulseiras')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Pulseiras</button>
-                    <button onclick="filterCategory('escapularios')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Escapulários</button>
-                    <button onclick="filterCategory('conjuntos')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">Conjuntos</button>
+                <!-- Menu Navegação (Dinamizado) -->
+                <nav id="nav-categories" class="hidden md:flex items-center space-x-5 text-sm font-medium tracking-wide overflow-x-auto">
                 </nav>
 
-                <!-- Actions -->
+                <!-- Ícones -->
                 <div class="flex items-center space-x-5">
                     <div class="relative hidden sm:block">
                         <input type="text" id="search-input" onkeyup="searchProducts()" placeholder="Buscar joias..." class="bg-wine-950/80 text-white text-xs rounded-full pl-8 pr-4 py-2 w-36 focus:w-48 focus:outline-none border border-gold-500/30 focus:border-gold-500 transition-all">
@@ -418,7 +589,7 @@
         </div>
     </header>
 
-    <!-- Hero Banner -->
+    <!-- Banner Principal -->
     <section class="relative bg-wine-950 text-white overflow-hidden border-b border-gold-500/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
             <div class="max-w-xl text-center md:text-left">
@@ -432,22 +603,15 @@
         </div>
     </section>
 
-    <!-- Main Catalogo -->
+    <!-- Catálogo de Produtos -->
     <main id="catalogo" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="flex flex-col md:flex-row items-center justify-between border-b border-gray-200 pb-6 mb-8 gap-4">
             <div>
                 <h2 class="font-serif text-3xl font-bold text-wine-950">Nossas Joias</h2>
                 <p class="text-xs text-gray-500 mt-1">Explore peças selecionadas com detalhes artesanais</p>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
-                <button onclick="filterCategory('todos')" class="btn-cat active px-4 py-1.5 rounded-full text-xs font-semibold bg-wine-900 text-gold-500 shadow-sm transition">Todos</button>
-                <button onclick="filterCategory('aneis')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">Anéis</button>
-                <button onclick="filterCategory('gargantilhas')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">Gargantilhas</button>
-                <button onclick="filterCategory('brincos')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">Brincos</button>
-                <button onclick="filterCategory('pulseiras')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">Pulseiras</button>
-                <button onclick="filterCategory('escapularios')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">Escapulários</button>
-                <button onclick="filterCategory('conjuntos')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">Conjuntos</button>
-            </div>
+            <!-- Filtros Dinâmicos -->
+            <div id="category-filters" class="flex flex-wrap items-center gap-2"></div>
         </div>
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
@@ -457,11 +621,33 @@
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             <div onclick="toggleAdminModal(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gray-100 p-6 md:p-8">
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gray-100 p-6 md:p-8">
                 <div class="flex justify-between items-center border-b pb-4 mb-4">
                     <h3 class="font-serif text-2xl font-bold text-wine-950">🔒 Painel Restrito - Firebase</h3>
                     <button onclick="toggleAdminModal(false)" class="text-gray-500 hover:text-wine-900 text-xl font-bold">&times;</button>
                 </div>
+
+                <!-- Seção 1: Nova Categoria -->
+                <div class="mb-6 p-4 bg-wine-50/50 rounded-xl border border-wine-100">
+                    <h4 class="font-bold text-wine-950 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-plus text-gold-500"></i> Cadastrar Nova Categoria
+                    </h4>
+                    <form onsubmit="saveCategoryToFirebase(event)" class="flex gap-2 text-xs">
+                        <input type="text" id="cat-name" required placeholder="Nome da Categoria (ex: Tornozeleiras)" class="flex-grow p-2.5 border rounded-lg text-xs bg-white">
+                        <button type="submit" class="px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold uppercase rounded-lg transition shrink-0">Cadastrar</button>
+                    </form>
+                    <div class="mt-3">
+                        <span class="text-[10px] text-gray-500 font-semibold">Categorias Atuais:</span>
+                        <div id="admin-categories-list" class="max-h-28 overflow-y-auto space-y-1.5 mt-1 text-xs"></div>
+                    </div>
+                </div>
+
+                <hr class="my-4 border-gray-200">
+
+                <!-- Seção 2: Cadastrar Produto -->
+                <h4 class="font-bold text-wine-950 text-xs uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                    <i class="fa-solid fa-gem text-gold-500"></i> Cadastrar Novo Produto
+                </h4>
                 <form id="product-form" onsubmit="saveProductToFirebase(event)" class="space-y-4 text-xs">
                     <div>
                         <label class="block font-semibold text-gray-700 mb-1">Nome da Joia:</label>
@@ -470,14 +656,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block font-semibold text-gray-700 mb-1">Categoria:</label>
-                            <select id="prod-cat" class="w-full p-2.5 border rounded-lg text-xs">
-                                <option value="aneis">Anéis</option>
-                                <option value="gargantilhas">Gargantilhas</option>
-                                <option value="brincos">Brincos</option>
-                                <option value="pulseiras">Pulseiras</option>
-                                <option value="escapularios">Escapulários</option>
-                                <option value="conjuntos">Conjuntos</option>
-                            </select>
+                            <select id="prod-cat" class="w-full p-2.5 border rounded-lg text-xs font-medium"></select>
                         </div>
                         <div>
                             <label class="block font-semibold text-gray-700 mb-1">Selo (Opcional):</label>
@@ -498,8 +677,10 @@
                     </div>
                     <button type="submit" class="w-full py-3 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold uppercase tracking-wider rounded-lg transition shadow">Salvar Produto no Firebase</button>
                 </form>
+
+                <!-- Seção 3: Lista de Produtos -->
                 <div class="mt-6 border-t pt-4">
-                    <h4 class="font-bold text-gray-700 mb-2">Produtos Cadastrados:</h4>
+                    <h4 class="font-bold text-gray-700 mb-2 text-xs uppercase tracking-wider">Produtos Cadastrados:</h4>
                     <div id="admin-products-list" class="max-h-48 overflow-y-auto space-y-2 text-xs"></div>
                 </div>
             </div>
