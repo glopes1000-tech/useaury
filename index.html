@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aury Joias e Semijoias | Painel Administrativo & Loja</title>
+    <title>Aury Joias e Semijoias | Elegância & Luxo</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -84,7 +84,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
-                <!-- Logo & Admin Access -->
+                <!-- Logo & Admin Access Secreto -->
                 <button onclick="pedirSenhaAdmin()" class="flex items-center gap-3 group text-left cursor-pointer bg-transparent border-0 p-0 focus:outline-none" title="Área Restrita - Donas da Aury">
                     <div class="w-12 h-12 rounded-full overflow-hidden border border-gold-500/60 p-1 bg-wine-950 shadow-md flex items-center justify-center">
                         <img src="../logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -98,7 +98,7 @@
                     </div>
                     <div class="flex flex-col">
                         <span class="font-serif text-2xl font-bold tracking-[0.25em] text-white group-hover:text-gold-500 transition">A U R Y</span>
-                        <span class="text-[9px] tracking-[0.3em] text-gold-500 uppercase -mt-1 font-semibold">Painel Admin & Loja</span>
+                        <span class="text-[9px] tracking-[0.3em] text-gold-500 uppercase -mt-1 font-semibold">Semijoias Sincronizadas</span>
                     </div>
                 </button>
 
@@ -127,13 +127,13 @@
         </div>
     </header>
 
-    <!-- Hero Banner -->
+    <!-- Hero Banner (Sem botão de admin visível) -->
     <section class="relative bg-wine-950 text-white overflow-hidden border-b border-gold-500/20">
         <div class="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
             
             <div class="max-w-xl text-center md:text-left">
-                <span class="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/30 text-gold-500 text-xs uppercase tracking-widest rounded-full mb-4 font-medium">Nova Coleção Luxo (Firebase Nuvem)</span>
+                <span class="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/30 text-gold-500 text-xs uppercase tracking-widest rounded-full mb-4 font-medium">Nova Coleção Luxo</span>
                 <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
                     Detalhes que iluminam
                 </h1>
@@ -145,9 +145,9 @@
                     <a href="#catalogo" class="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold text-xs uppercase tracking-wider rounded-full transition shadow-lg hover:shadow-gold-500/20">
                         Ver Coleção
                     </a>
-                    <button onclick="pedirSenhaAdmin()" class="px-8 py-3.5 bg-transparent border border-gold-500/50 hover:border-gold-500 text-gold-500 text-xs uppercase tracking-wider rounded-full transition hover:bg-gold-500/10 flex items-center gap-2">
-                        <i class="fa-solid fa-lock"></i> Abrir Painel Admin
-                    </button>
+                    <a href="https://wa.me/5591984099331?text=Olá!%20Gostaria%20de%20atendimento%20VIP%20no%20catálogo." target="_blank" class="px-8 py-3.5 bg-transparent border border-gold-500/50 hover:border-gold-500 text-gold-500 text-xs uppercase tracking-wider rounded-full transition hover:bg-gold-500/10 flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp"></i> Atendimento VIP
+                    </a>
                 </div>
             </div>
 
@@ -306,7 +306,6 @@
         let cart = [];
         let wishlist = [];
 
-        // Carregar dados da Nuvem ao iniciar o Firebase
         window.addEventListener('firebase-ready', async () => {
             await loadDataFromFirebase();
         });
@@ -316,7 +315,6 @@
             const { collection, getDocs } = window.firebaseCollections;
 
             try {
-                // Carregar Categorias
                 const catSnapshot = await getDocs(collection(db, "categories"));
                 if (!catSnapshot.empty) {
                     categories = catSnapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
@@ -329,13 +327,11 @@
                         { id: 'aneis', name: 'Anéis' },
                         { id: 'pulseiras', name: 'Pulseiras e Braceletes' }
                     ];
-                    // Salvar padrão no Firestore
                     for (let cat of categories) {
                         await window.firebaseCollections.setDoc(window.firebaseCollections.doc(db, "categories", cat.id), { name: cat.name });
                     }
                 }
 
-                // Carregar Produtos
                 const prodSnapshot = await getDocs(collection(db, "products"));
                 if (!prodSnapshot.empty) {
                     products = prodSnapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
@@ -644,4 +640,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
