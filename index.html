@@ -1,78 +1,600 @@
-let categories = [];
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aury Joias e Semijoias | Elegância & Luxo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        // Categorias Padrão
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wine: {
+                            50: '#fdf2f4',
+                            100: '#fbe5e8',
+                            200: '#f7ced5',
+                            600: '#7a1221',
+                            800: '#4a0e17',
+                            900: '#32060c',
+                            950: '#210408',
+                        },
+                        gold: {
+                            300: '#f6e05e',
+                            400: '#ecc94b',
+                            500: '#d4af37',
+                            600: '#b78a28',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #210408;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Top Announcement Bar -->
+    <div onclick="toggleBrindeModal(true)" class="bg-gradient-to-r from-wine-950 via-wine-900 to-wine-950 text-gold-400 text-xs py-2.5 px-4 text-center font-medium border-b border-gold-500/20 tracking-wide flex items-center justify-center gap-2 shadow-inner cursor-pointer hover:text-white transition">
+        <i class="fa-solid fa-gift text-gold-500 animate-pulse"></i>
+        <span>Nas compras a partir de <strong>R\$ 189,90</strong>, você recebe um presente exclusivo Aury! <span class="underline ml-1 font-semibold text-gold-300">Ver Presente</span></span>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-40 bg-wine-900 border-b border-gold-500/30 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo Section -->
+                <button onclick="pedirSenhaAdmin()" class="flex items-center gap-3 group text-left cursor-pointer bg-transparent border-0 p-0 focus:outline-none" title="Área Restrita - Donas da Aury">
+                    <div class="w-12 h-12 rounded-full overflow-hidden border border-gold-500/60 p-1 bg-wine-950 shadow-md flex items-center justify-center">
+                        <img src="logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden w-full h-full items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-full h-full text-white fill-current">
+                                <path d="M 50 15 C 30 15, 15 35, 15 50 C 15 65, 30 85, 50 85 C 70 85, 85 65, 85 50 C 85 35, 70 15, 50 15 Z" fill="#32060c"/>
+                                <path d="M 32 45 C 28 35, 40 30, 52 42 L 68 70 M 60 28 L 40 68" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                                <circle cx="36" cy="45" r="2.5" fill="#ffffff" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-serif text-2xl font-bold tracking-[0.25em] text-white group-hover:text-gold-500 transition">A U R Y</span>
+                        <span class="text-[9px] tracking-[0.3em] text-gold-500 uppercase -mt-1 font-semibold">Semijoias</span>
+                    </div>
+                </button>
+
+                <!-- Desktop Navigation Dinâmico -->
+                <nav id="nav-categories" class="hidden md:flex items-center space-x-5 text-sm font-medium tracking-wide">
+                </nav>
+
+                <!-- Search & Action Icons -->
+                <div class="flex items-center space-x-5">
+                    <div class="relative hidden sm:block">
+                        <input type="text" id="search-input" onkeyup="searchProducts()" placeholder="Buscar joias..." class="bg-wine-950/80 text-white text-xs rounded-full pl-8 pr-4 py-2 w-36 focus:w-48 focus:outline-none border border-gold-500/30 focus:border-gold-500 transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gold-500 text-xs"></i>
+                    </div>
+
+                    <button class="text-gray-200 hover:text-gold-500 transition relative">
+                        <i class="fa-regular fa-heart text-xl"></i>
+                        <span id="wishlist-count" class="absolute -top-2 -right-2 bg-gold-500 text-wine-950 font-bold text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                    </button>
+
+                    <button id="cart-btn" onclick="toggleCart(true)" class="text-gray-200 hover:text-gold-500 transition relative">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-gold-500 text-wine-950 font-bold text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="relative bg-wine-950 text-white overflow-hidden border-b border-gold-500/20">
+        <div class="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            
+            <div class="max-w-xl text-center md:text-left">
+                <span class="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/30 text-gold-500 text-xs uppercase tracking-widest rounded-full mb-4 font-medium">Nova Coleção Luxo</span>
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
+                    Detalhes que iluminam
+                </h1>
+                <p class="text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+                    expressões de amor em forma de Joia.<br>
+                    <span class="block mt-2 text-xs sm:text-sm text-gold-400 font-medium">Conheça as nossas semijoias com design sofisticado, de alta qualidade, hipoalergênicas e banhadas a ouro 18K.</span>
+                </p>
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                    <a href="#catalogo" class="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold text-xs uppercase tracking-wider rounded-full transition shadow-lg hover:shadow-gold-500/20">
+                        Ver Coleção
+                    </a>
+                    <a href="https://wa.me/5591984099331?text=Olá!%20Gostaria%20de%20atendimento%20VIP%20no%20catálogo." target="_blank" class="px-8 py-3.5 bg-transparent border border-gold-500/50 hover:border-gold-500 text-gold-500 text-xs uppercase tracking-wider rounded-full transition hover:bg-gold-500/10 flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp"></i> Atendimento VIP
+                    </a>
+                </div>
+            </div>
+
+            <!-- Featured Card -->
+            <div class="relative w-full max-w-sm">
+                <div class="absolute -inset-1 bg-gradient-to-r from-gold-500 to-wine-600 rounded-2xl blur opacity-30"></div>
+                <div class="relative bg-wine-900 border border-gold-500/30 rounded-2xl p-8 shadow-2xl text-center flex flex-col items-center">
+                    <div class="w-28 h-28 rounded-full border-2 border-gold-500/50 p-1 bg-wine-950 shadow-inner mb-4 flex items-center justify-center overflow-hidden">
+                        <img src="logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden w-full h-full items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-full h-full text-white fill-current">
+                                <path d="M 32 45 C 28 35, 40 30, 52 42 L 68 70 M 60 28 L 40 68" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h2 class="font-serif text-2xl text-white font-bold tracking-widest mb-1">A U R Y</h2>
+                    <p class="text-xs text-gold-500 tracking-[0.25em] uppercase mb-4 font-semibold">Semijoias</p>
+                    <div class="grid grid-cols-3 gap-2 border-t border-gold-500/20 pt-4 text-center text-xs w-full">
+                        <div>
+                            <span class="block text-white font-bold">100%</span>
+                            <span class="text-gray-400 text-[10px]">Hipoalergênico</span>
+                        </div>
+                        <div>
+                            <span class="block text-white font-bold">18K</span>
+                            <span class="text-gray-400 text-[10px]">Banho de Ouro</span>
+                        </div>
+                        <div>
+                            <span class="block text-white font-bold">Verniz</span>
+                            <span class="text-gray-400 text-[10px]">Italiano</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Banner Especial de Presente Exclusivo -->
+    <section class="bg-wine-900 text-white py-12 border-b border-gold-500/30 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-wine-950/80 border border-gold-500/40 rounded-2xl p-6 sm:p-8 md:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+                
+                <div class="max-w-xl text-center md:text-left space-y-4">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-xs uppercase tracking-widest rounded-full font-bold">
+                        <i class="fa-solid fa-gift text-gold-500"></i> Mimo Especial Aury
+                    </span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white leading-tight">
+                        Seu pedido com um toque de cuidado extra
+                    </h2>
+                    <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+                        Nas compras a partir de <strong class="text-gold-400">R\$ 189,90</strong>, você ganha nosso <strong>Espelho de Bolsa Elegance Aury</strong> com capa em couro ecológico marfim e monograma bordado. O acessório compacto e sofisticado perfeito para ter sempre com você!
+                    </p>
+                    <button onclick="toggleBrindeModal(true)" class="inline-flex items-center gap-2 px-6 py-2.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold text-xs uppercase tracking-wider rounded-full transition shadow-md">
+                        <i class="fa-regular fa-eye"></i> Ver Detalhes do Presente
+                    </button>
+                </div>
+
+                <div class="relative w-full max-w-xs md:max-w-sm rounded-xl overflow-hidden border-2 border-gold-500/50 shadow-xl group cursor-pointer" onclick="toggleBrindeModal(true)">
+                    <img src="brinde.jpg" alt="Presente Exclusivo Aury - Espelho de Bolsa" class="w-full h-64 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='IMG_8311.jpg'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-wine-950/80 via-transparent to-transparent flex items-end p-4">
+                        <span class="text-gold-400 font-serif text-sm font-bold tracking-wide flex items-center justify-between w-full">
+                            Espelho de Bolsa Exclusivo Aury <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Catalogo -->
+    <main id="catalogo" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Filter Tabs -->
+        <div class="flex flex-col md:flex-row items-center justify-between border-b border-gray-200 pb-6 mb-8 gap-4">
+            <div>
+                <h2 class="font-serif text-3xl font-bold text-wine-950">Nossas Joias</h2>
+                <p class="text-xs text-gray-500 mt-1">Explore peças selecionadas com detalhes artesanais</p>
+            </div>
+
+            <!-- Filtros Dinâmicos -->
+            <div id="category-filters" class="flex flex-wrap items-center gap-2"></div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        </div>
+
+    </main>
+
+    <!-- Modal do Presente Exclusivo Aury -->
+    <div id="brinde-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleBrindeModal(false)" class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gold-500/30 p-6 md:p-8">
+                
+                <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-gift text-gold-500 text-xl"></i>
+                        <h3 class="font-serif text-2xl font-bold text-wine-950">Seu Presente Exclusivo Aury</h3>
+                    </div>
+                    <button onclick="toggleBrindeModal(false)" class="text-gray-500 hover:text-wine-900 text-xl font-bold">&times;</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="rounded-xl overflow-hidden border border-gold-500/30 shadow-md aspect-video bg-gray-100">
+                        <img src="brinde.jpg" alt="Espelho de Bolsa Aury" class="w-full h-full object-cover" onerror="this.src='IMG_8311.jpg'">
+                    </div>
+
+                    <div class="text-xs sm:text-sm text-gray-600 leading-relaxed space-y-2">
+                        <p class="font-semibold text-wine-900">
+                            Espelho de Bolsa Retátil em Couro Ecológico Marfim com Monograma Aury
+                        </p>
+                        <p>
+                            Desenvolvido especialmente para clientes Aury, este espelho portátil possui acabamento sofisticado em couro ecológico marfim, estampa bordada do monograma exclusivo da marca e sistema dobrável de suporte.
+                        </p>
+                        <p class="text-gold-600 font-bold text-xs bg-gold-50 border border-gold-200 p-3 rounded-lg flex items-center gap-2">
+                            <i class="fa-solid fa-sparkles"></i> Adicione ao carrinho R\$ 189,90 em semijoias e receba automaticamente em sua caixa especial Aury!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-100 text-right">
+                    <button onclick="toggleBrindeModal(false)" class="px-6 py-2.5 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold text-xs uppercase tracking-wider rounded-lg transition shadow">
+                        Continuar Comprando
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal do Painel Administrativo Protegido por Senha -->
+    <div id="admin-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleAdminModal(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gray-100 p-6 md:p-8">
+                
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <h3 class="font-serif text-2xl font-bold text-wine-950">🔒 Painel Restrito - Aury Semijoias</h3>
+                    <button onclick="toggleAdminModal(false)" class="text-gray-500 hover:text-wine-900 text-xl font-bold">&times;</button>
+                </div>
+
+                <!-- Seção 1: Cadastrar Nova Categoria -->
+                <div class="mb-6 p-4 bg-wine-50/50 rounded-xl border border-wine-100">
+                    <h4 class="font-bold text-wine-950 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-plus text-gold-500"></i> Cadastrar Nova Categoria
+                    </h4>
+                    <form onsubmit="saveCategory(event)" class="flex gap-2 text-xs">
+                        <input type="text" id="cat-name" required placeholder="Nome da Categoria (ex: Tornozeleiras)" class="flex-grow p-2.5 border rounded-lg text-xs bg-white">
+                        <button type="submit" class="px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold uppercase rounded-lg transition shrink-0">Cadastrar</button>
+                    </form>
+                    <div class="mt-3">
+                        <span class="text-[10px] text-gray-500 font-semibold">Categorias Atuais:</span>
+                        <div id="admin-categories-list" class="max-h-28 overflow-y-auto space-y-1.5 mt-1 text-xs"></div>
+                    </div>
+                </div>
+
+                <hr class="my-4 border-gray-200">
+
+                <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4 text-xs">
+                    <input type="hidden" id="edit-id">
+                    
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Nome da Joia:</label>
+                        <input type="text" id="prod-name" required class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="Ex: Anel Luxos Ouro 18k">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Categoria:</label>
+                            <select id="prod-cat" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs font-medium"></select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Selo (Opcional):</label>
+                            <input type="text" id="prod-badge" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="Ex: Destaque, Mais Vendido">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Preço Atual (R\$):</label>
+                        <input type="number" step="0.01" id="prod-price" required class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="297.00">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Selecionar Foto no Computador:</label>
+                        <input type="file" id="prod-image-file" accept="image/*" class="w-full p-2 border rounded-lg focus:outline-none focus:border-wine-900 text-xs bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-wine-900 file:text-gold-500 hover:file:bg-wine-950 cursor-pointer">
+                        <p class="text-[10px] text-gray-500 mt-1">Selecione uma imagem do produto direto do seu computador.</p>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Descrição Completa:</label>
+                        <textarea id="prod-desc" rows="3" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-wine-900 text-xs" placeholder="Detalhes do banho..."></textarea>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" class="flex-grow py-3 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold uppercase tracking-wider rounded-lg transition shadow">
+                            Salvar Produto
+                        </button>
+                        <button type="button" onclick="resetForm()" class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg transition">
+                            Limpar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 border-t pt-4">
+                    <h4 class="font-bold text-gray-700 mb-2">Gerenciar Produtos Cadastrados:</h4>
+                    <div id="admin-products-list" class="max-h-48 overflow-y-auto space-y-2 text-xs">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cuidados com as Peças -->
+    <div id="cuidados-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleCuidadosModal(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gold-500/20 p-6 md:p-8">
+                
+                <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-sparkles text-gold-500 text-2xl"></i>
+                        <h3 class="font-serif text-2xl font-bold text-wine-950">Como Cuidar de Suas Peças</h3>
+                    </div>
+                    <button onclick="toggleCuidadosModal(false)" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-wine-900 hover:text-white flex items-center justify-center transition text-gray-600 font-bold">&times;</button>
+                </div>
+
+                <div class="space-y-6 text-xs sm:text-sm max-h-[70vh] overflow-y-auto pr-2">
+                    <div>
+                        <h4 class="font-serif text-lg font-bold text-wine-900 border-b border-gold-500/30 pb-1 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-heart text-gold-500 text-sm"></i> Principais Cuidados
+                        </h4>
+                        <ul class="space-y-2 text-gray-600 leading-relaxed pl-1">
+                            <li><strong class="text-wine-950">• Evite contato com água:</strong> Retire as peças antes do banho, piscina ou mar.</li>
+                            <li><strong class="text-wine-950">• Cuidado com cosméticos:</strong> Aplique perfumes e cremes antes dos acessórios.</li>
+                            <li><strong class="text-wine-950">• Longe de químicos:</strong> Evite produtos de limpeza e álcool.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-100 text-right">
+                    <button onclick="toggleCuidadosModal(false)" class="px-6 py-2.5 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold text-xs uppercase tracking-wider rounded-lg transition shadow">
+                        Entendi
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleQuickView(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full border border-gray-100">
+                <div class="absolute top-4 right-4 z-10">
+                    <button onclick="toggleQuickView(false)" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-wine-900 hover:text-white flex items-center justify-center transition text-gray-600">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="quick-view-content" class="grid grid-cols-1 md:grid-cols-2 p-6 md:p-8 gap-8 items-center">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div onclick="toggleCart(false)" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+
+        <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div class="pointer-events-auto w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                
+                <div class="bg-wine-900 text-white p-6 flex items-center justify-between border-b border-gold-500/30">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-bag-shopping text-gold-500 text-xl"></i>
+                        <h2 class="font-serif text-xl font-bold tracking-wide">Seu Carrinho</h2>
+                    </div>
+                    <button onclick="toggleCart(false)" class="text-gray-300 hover:text-gold-500 transition text-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4">
+                </div>
+
+                <div class="p-6 bg-gray-50 border-t border-gray-200 space-y-4">
+                    <div class="flex justify-between text-sm font-semibold text-gray-700">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal" class="font-serif text-lg text-wine-900">R\$ 0,00</span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <button onclick="checkoutWhatsApp()" class="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Finalizar pelo WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-wine-950 text-white border-t border-gold-500/30 pt-12 pb-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full border border-gold-500/60 p-0.5 bg-wine-900 flex items-center justify-center overflow-hidden">
+                        <img src="logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden w-full h-full items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-full h-full text-white fill-current">
+                                <path d="M 32 45 C 28 35, 40 30, 52 42 L 68 70 M 60 28 L 40 68" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="font-serif text-xl font-bold tracking-widest text-white">AURY</span>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Especialistas em semijoias de altíssima qualidade banhadas a Ouro 18k e Prata.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg font-semibold text-gold-500 mb-4">Navegação</h4>
+                <ul class="space-y-2 text-xs text-gray-300">
+                    <li><a href="#" class="hover:text-gold-500 transition">Início</a></li>
+                    <li><a href="#catalogo" class="hover:text-gold-500 transition">Coleções</a></li>
+                    <li><button onclick="toggleCuidadosModal(true)" class="hover:text-gold-500 transition text-left cursor-pointer">Como cuidar de suas peças</button></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg font-semibold text-gold-500 mb-4">Atendimento</h4>
+                <ul class="space-y-2 text-xs text-gray-300">
+                    <li class="flex items-center gap-2"><i class="fa-brands fa-whatsapp text-gold-500"></i> (91) 98409-9331</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg font-semibold text-gold-500 mb-4">Redes Sociais</h4>
+                <ul class="space-y-3 text-xs text-gray-300">
+                    <li>
+                        <a href="https://instagram.com/useauryjoias" target="_blank" class="inline-flex items-center gap-2 hover:text-gold-500 transition group">
+                            <span class="w-8 h-8 rounded-full bg-wine-900 border border-gold-500/30 flex items-center justify-center text-gold-500 group-hover:bg-gold-500 group-hover:text-wine-950 transition">
+                                <i class="fa-brands fa-instagram text-sm"></i>
+                            </span>
+                            <span class="font-medium text-gray-200 group-hover:text-gold-500 transition">@useauryjoias</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="border-t border-wine-900 max-w-7xl mx-auto px-4 pt-6 text-center text-[11px] text-gray-500">
+            © 2026 Aury Joias e Semijoias. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- JavaScript Principal com Gestão de Categorias e Produtos -->
+    <script>
+        const numeroWhatsApp = "5591984099331";
+        const SENHA_ADMIN = "aury2026";
+
         const defaultCategories = [
-            { id: 'aneis', name: 'Anéis' },
-            { id: 'gargantilhas', name: 'Gargantilhas' },
             { id: 'brincos', name: 'Brincos' },
-            { id: 'pulseiras', name: 'Pulseiras' },
+            { id: 'gargantilhas', name: 'Gargantilhas' },
             { id: 'escapularios', name: 'Escapulários' },
-            { id: 'conjuntos', name: 'Conjuntos' }
+            { id: 'conjuntos', name: 'Conjuntos' },
+            { id: 'aneis', name: 'Anéis' },
+            { id: 'pulseiras', name: 'Pulseiras e Braceletes' }
         ];
 
-        // Carregar categorias do Firestore
-        window.loadCategoriesFromFirebase = async function() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "categories"));
-                categories = [];
-                querySnapshot.forEach((docSnap) => {
-                    categories.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                if (categories.length === 0) {
-                    for (const cat of defaultCategories) {
-                        await setDoc(doc(db, "categories", cat.id), { name: cat.name });
-                    }
-                    categories = [...defaultCategories];
-                }
-
-                renderCategoryUI();
-            } catch (error) {
-                console.error("Erro ao carregar categorias:", error);
-                categories = [...defaultCategories];
-                renderCategoryUI();
+        const defaultProducts = [
+            {
+                id: 501,
+                name: "Brinco Zircônia Quadrado 6x6mm",
+                category: "brincos",
+                price: 137.00,
+                image: "brincos/brinco1.jpg",
+                badge: "Lançamento",
+                description: "O deslumbrante Brinco Zircônia Quadrado 6x6mm combina geometria perfeita e alto brilho em um banho de ouro 18K impecável."
+            },
+            {
+                id: 502,
+                name: "Argola Cravejada",
+                category: "brincos",
+                price: 79.00,
+                image: "brincos/brinco2.jpg",
+                badge: "Mais Vendido",
+                description: "A clássica Argola Cravejada traz pedras zircônias reluzentes que proporcionam um toque sofisticado para qualquer ocasião."
+            },
+            {
+                id: 401,
+                name: "Gargantilha Crucifixo Com Coração Cravejado Folheado a Ouro 18k",
+                category: "gargantilhas",
+                price: 267.00,
+                image: "gargantilhas/gargantilha1.jpg",
+                badge: "Novo",
+                description: "A emocionante Gargantilha Crucifixo Com Coração Cravejado Folheado a Ouro 18k une fé e delicadeza em uma joia deslumbrante."
+            },
+            {
+                id: 301,
+                name: "Escapulário Sagrado Ouro 18K 1",
+                category: "escapularios",
+                price: 119.00,
+                image: "escapularios/escapulario1.jpg",
+                badge: "Novo",
+                description: "O protetor Escapulário Sagrado Ouro 18K 1 traz o equilíbrio perfeito entre fé e sofisticação diária."
+            },
+            {
+                id: 1,
+                name: "Conjunto Laços",
+                category: "conjuntos",
+                price: 92.00,
+                image: "conjuntos/conjunto1.jpg",
+                badge: "Destaque",
+                description: "O harmonioso Conjunto Laços traz peças perfeitamente combinadas com o formato romântico de laço banhado a ouro 18K."
+            },
+            {
+                id: 101,
+                name: "Anel nossa Senhora",
+                category: "aneis",
+                price: 49.90,
+                image: "aneis/anel1.jpg",
+                badge: "Novo",
+                description: "O devoto Anel nossa Senhora protege e embeleza suas mãos com um acabamento delicado em ouro 18K."
+            },
+            {
+                id: 201,
+                name: "Bracelete faixa tripla cravejada ban - Dourado cristal",
+                category: "pulseiras",
+                price: 210.00,
+                image: "pulseiras/pulseira1.jpg",
+                badge: "Novo",
+                description: "O marcante Bracelete faixa tripla cravejada ban - Dourado cristal veste o pulso com imponência e brilho tridimensional."
             }
-        };
+        ];
 
-        // Cadastrar nova categoria
-        window.saveCategoryToFirebase = async function(event) {
-            event.preventDefault();
-            const catNameInput = document.getElementById('cat-name');
-            const name = catNameInput.value.trim();
-            if (!name) return;
+        let storedCategories = localStorage.getItem('aury_categories');
+        let categories = storedCategories ? JSON.parse(storedCategories) : defaultCategories;
 
-            const id = name.toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9]/g, '-');
+        let storedProducts = localStorage.getItem('aury_products');
+        let products = storedProducts ? JSON.parse(storedProducts) : defaultProducts;
 
-            try {
-                await setDoc(doc(db, "categories", id), { name });
-                alert(`Categoria "${name}" cadastrada com sucesso!`);
-                catNameInput.value = '';
-                await loadCategoriesFromFirebase();
-                renderAdminCategoryList();
-            } catch (error) {
-                console.error("Erro ao salvar categoria:", error);
-                alert("Erro ao cadastrar categoria.");
-            }
-        };
+        let cart = [];
+        let wishlist = [];
 
-        // Excluir categoria
-        window.deleteCategoryFromFirebase = async function(id) {
-            if (confirm("Tem certeza que deseja excluir esta categoria?")) {
-                try {
-                    await deleteDoc(doc(db, "categories", id));
-                    alert("Categoria excluída com sucesso!");
-                    await loadCategoriesFromFirebase();
-                    renderAdminCategoryList();
-                } catch (error) {
-                    console.error("Erro ao excluir categoria:", error);
-                }
-            }
-        };
+        function saveStorage() {
+            localStorage.setItem('aury_categories', JSON.stringify(categories));
+            localStorage.setItem('aury_products', JSON.stringify(products));
+        }
 
-        // Atualizar interfaces de categoria
-        window.renderCategoryUI = function() {
+        function renderCategoryUI() {
             const navMenu = document.getElementById('nav-categories');
             if (navMenu) {
                 navMenu.innerHTML = `<button onclick="filterCategory('todos')" class="nav-link text-white hover:text-gold-500 transition py-2 border-b-2 border-transparent hover:border-gold-500">Início</button>`;
@@ -96,18 +618,377 @@ let categories = [];
                     selectCat.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
                 });
             }
-        };
+        }
 
-        window.renderAdminCategoryList = function() {
+        function saveCategory(event) {
+            event.preventDefault();
+            const catNameInput = document.getElementById('cat-name');
+            const name = catNameInput.value.trim();
+            if (!name) return;
+
+            const id = name.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]/g, '-');
+
+            if (categories.some(c => c.id === id)) {
+                alert('Esta categoria já existe!');
+                return;
+            }
+
+            categories.push({ id, name });
+            saveStorage();
+            renderCategoryUI();
+            renderAdminCategoryList();
+            catNameInput.value = '';
+            alert(`Categoria "${name}" cadastrada com sucesso!`);
+        }
+
+        function deleteCategory(id) {
+            if (confirm("Tem certeza que deseja excluir esta categoria?")) {
+                categories = categories.filter(c => c.id !== id);
+                saveStorage();
+                renderCategoryUI();
+                renderAdminCategoryList();
+                renderProducts(products);
+            }
+        }
+
+        function renderAdminCategoryList() {
             const list = document.getElementById('admin-categories-list');
             if (!list) return;
             list.innerHTML = '';
+
+            if (categories.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 text-center py-2">Nenhuma categoria cadastrada.</p>`;
+                return;
+            }
+
             categories.forEach(c => {
                 list.innerHTML += `
-                    <div class="flex items-center justify-between bg-gray-50 p-2 rounded-lg border border-gray-200 mb-1">
+                    <div class="flex items-center justify-between bg-gray-50 p-2 rounded-lg border border-gray-200">
                         <span class="font-medium text-gray-800">${c.name}</span>
-                        <button onclick="deleteCategoryFromFirebase('${c.id}')" class="px-2 py-1 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[10px]">Excluir</button>
+                        <button onclick="deleteCategory('${c.id}')" class="px-2 py-1 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[10px]">
+                            <i class="fa-solid fa-trash-can"></i> Excluir
+                        </button>
                     </div>
                 `;
             });
-        };
+        }
+
+        function renderProducts(items) {
+            const grid = document.getElementById('product-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fa-solid fa-gem text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500 font-medium">Nenhuma joia encontrada nesta categoria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            items.forEach(product => {
+                const isFavorite = wishlist.includes(product.id);
+                const badgeHTML = product.badge ? `<span class="absolute top-3 left-3 z-10 bg-wine-900 text-gold-500 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border border-gold-500/30">${product.badge}</span>` : '';
+                const msgWhats = encodeURIComponent(`Olá! Gostaria de comprar ou tirar dúvidas sobre o produto: ${product.name} (R$ ${Number(product.price).toFixed(2).replace('.', ',')})`);
+
+                const catObj = categories.find(c => c.id === product.category);
+                const catName = catObj ? catObj.name : product.category;
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
+                        <div class="relative overflow-hidden aspect-square bg-gray-100">
+                            ${badgeHTML}
+                            
+                            <button onclick="toggleWishlist(${product.id})" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-600 hover:text-red-500 transition shadow">
+                                <i class="${isFavorite ? 'fa-solid text-red-500' : 'fa-regular'} fa-heart text-sm"></i>
+                            </button>
+
+                            <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-550" onerror="this.src='https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=600'">
+                            
+                            <button onclick="openQuickView(${product.id})" class="absolute inset-x-4 bottom-4 py-2.5 bg-wine-900/90 hover:bg-wine-900 text-gold-500 text-xs uppercase font-bold tracking-wider rounded-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg border border-gold-500/30">
+                                <i class="fa-regular fa-eye mr-1"></i> Visualização Rápida
+                            </button>
+                        </div>
+
+                        <div class="p-5 flex-grow flex flex-col justify-between space-y-3">
+                            <div>
+                                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">${catName}</span>
+                                <h3 class="font-serif text-lg font-bold text-gray-900 group-hover:text-wine-900 transition line-clamp-1">${product.name}</h3>
+                            </div>
+
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-lg font-bold text-wine-900 font-serif">R$ ${Number(product.price).toFixed(2).replace('.', ',')}</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="addToCart(${product.id})" class="py-2.5 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold text-[11px] uppercase tracking-wider rounded-lg transition border border-gold-500/30 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-bag-shopping"></i> Sacola
+                                </button>
+                                <a href="https://wa.me/${numeroWhatsApp}?text=${msgWhats}" target="_blank" class="py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold text-[11px] uppercase tracking-wider rounded-lg transition flex items-center justify-center gap-1 shadow">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function pedirSenhaAdmin() {
+            const senhaDigitada = prompt("Área restrita da Aury Semijoias.\nDigite a sua senha de administradora:");
+            if (senhaDigitada === SENHA_ADMIN) {
+                toggleAdminModal(true);
+            } else if (senhaDigitada !== null) {
+                alert("Senha incorreta! Acesso negado.");
+            }
+        }
+
+        function toggleBrindeModal(open) {
+            const modal = document.getElementById('brinde-modal');
+            if (open) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function toggleAdminModal(open) {
+            const modal = document.getElementById('admin-modal');
+            if (open) {
+                renderAdminList();
+                renderAdminCategoryList();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function toggleCuidadosModal(open) {
+            const modal = document.getElementById('cuidados-modal');
+            if (open) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('prod-name').value;
+            const category = document.getElementById('prod-cat').value;
+            const badge = document.getElementById('prod-badge').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const description = document.getElementById('prod-desc').value;
+            const imageFile = document.getElementById('prod-image-file').files[0];
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageUrl = e.target.result;
+                    addProductToStore(name, category, badge, price, imageUrl, description);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                alert('Por favor, selecione uma foto do produto no seu computador.');
+            }
+        }
+
+        function addProductToStore(name, category, badge, price, image, description) {
+            const newProduct = {
+                id: Date.now(),
+                name,
+                category,
+                badge,
+                price,
+                image,
+                description
+            };
+
+            products.push(newProduct);
+            saveStorage();
+            renderProducts(products);
+            renderAdminList();
+            resetForm();
+
+            alert('Produto cadastrado com sucesso!');
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Tem certeza que deseja excluir esta joia do catálogo?")) {
+                products = products.filter(p => p.id !== id);
+                saveStorage();
+                renderProducts(products);
+                renderAdminList();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-id').value = '';
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-products-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (products.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 text-center py-2">Nenhum produto cadastrado.</p>`;
+                return;
+            }
+
+            products.forEach(p => {
+                const catObj = categories.find(c => c.id === p.category);
+                const catName = catObj ? catObj.name : p.category;
+
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border border-gray-200">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <img src="${p.image}" class="w-8 h-8 object-cover rounded" onerror="this.src='https://via.placeholder.com/40'">
+                            <div class="flex flex-col truncate">
+                                <span class="font-medium text-gray-800 truncate">${p.name}</span>
+                                <span class="text-[10px] text-gray-400">${catName}</span>
+                            </div>
+                        </div>
+                        <button onclick="deleteProduct(${p.id})" class="px-2.5 py-1.5 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[11px] flex items-center gap-1">
+                            <i class="fa-solid fa-trash-can"></i> Excluir
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function openQuickView(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const catObj = categories.find(c => c.id === product.category);
+            const catName = catObj ? catObj.name : product.category;
+            const msgWhats = encodeURIComponent(`Olá! Gostaria de comprar ou tirar dúvidas sobre o produto: ${product.name} (R$ ${Number(product.price).toFixed(2).replace('.', ',')})`);
+
+            const content = document.getElementById('quick-view-content');
+            content.innerHTML = `
+                <div class="aspect-square rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                </div>
+                <div class="space-y-4 text-left">
+                    <span class="text-[10px] bg-wine-50 text-wine-900 px-2.5 py-1 rounded-full uppercase tracking-widest font-bold border border-wine-200">${catName}</span>
+                    <h2 class="font-serif text-2xl font-bold text-wine-950">${product.name}</h2>
+                    <div class="flex items-baseline gap-3">
+                        <span class="text-2xl font-bold text-wine-900 font-serif">R$ ${Number(product.price).toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-relaxed">${product.description || 'Sem descrição informada.'}</p>
+                    <div class="border-t border-gray-100 pt-4 space-y-3">
+                        <div class="flex items-center gap-2 text-xs text-gray-500">
+                            <i class="fa-solid fa-shield-halved text-gold-500"></i> Banhadas a ouro 18K e Verniz italiano (Antialérgico)
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="addToCart(${product.id}); toggleQuickView(false);" class="py-3 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold text-xs uppercase tracking-wider rounded-lg transition border border-gold-500/30 flex items-center justify-center gap-1 shadow">
+                                <i class="fa-solid fa-bag-shopping"></i> Sacola
+                            </button>
+                            <a href="https://wa.me/${numeroWhatsApp}?text=${msgWhats}" target="_blank" class="py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition flex items-center justify-center gap-1 shadow">
+                                <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            toggleQuickView(true);
+        }
+
+        function toggleQuickView(open) {
+            const modal = document.getElementById('quick-view-modal');
+            if (open) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function toggleCart(open) {
+            const drawer = document.getElementById('cart-drawer');
+            if (open) drawer.classList.remove('hidden');
+            else drawer.classList.add('hidden');
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+            if (existing) existing.quantity++;
+            else cart.push({ ...product, quantity: 1 });
+            updateCartUI();
+            toggleCart(true);
+        }
+
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCountBadge = document.getElementById('cart-count');
+            const cartSubtotalEl = document.getElementById('cart-subtotal');
+            if (!cartItemsContainer) return;
+
+            const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+            cartCountBadge.textContent = totalItems;
+
+            cartItemsContainer.innerHTML = '';
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-400">
+                        <i class="fa-solid fa-bag-shopping text-4xl mb-3 text-gray-300"></i>
+                        <p class="text-sm">Seu carrinho está vazio.</p>
+                    </div>
+                `;
+            } else {
+                cart.forEach(item => {
+                    cartItemsContainer.innerHTML += `
+                        <div class="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+                            <div class="flex-grow">
+                                <h4 class="text-xs font-bold text-gray-800 line-clamp-1">${item.name}</h4>
+                                <span class="text-xs font-bold text-wine-900 font-serif">R$ ${Number(item.price).toFixed(2).replace('.', ',')} x ${item.quantity}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            cartSubtotalEl.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+        }
+
+        function toggleWishlist(id) {
+            if (wishlist.includes(id)) wishlist = wishlist.filter(item => item !== id);
+            else wishlist.push(id);
+            document.getElementById('wishlist-count').textContent = wishlist.length;
+            renderProducts(products);
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.btn-cat').forEach(btn => {
+                btn.classList.remove('bg-wine-900', 'text-gold-500');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            if (event && event.target) {
+                event.target.classList.remove('bg-gray-200', 'text-gray-700');
+                event.target.classList.add('bg-wine-900', 'text-gold-500');
+            }
+
+            if (cat === 'todos') renderProducts(products);
+            else renderProducts(products.filter(p => p.category === cat));
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            renderProducts(products.filter(p => p.name.toLowerCase().includes(query)));
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return alert('Seu carrinho está vazio!');
+            let msg = "Olá, Aury Joias! Gostaria de finalizar meu pedido:\n\n";
+            cart.forEach(i => msg += `• ${i.name} (${i.quantity}x) - R$ ${(i.price * i.quantity).toFixed(2)}\n`);
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            msg += `\n*Total: R$ ${subtotal.toFixed(2)}*`;
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Inicialização ao carregar a página
+        renderCategoryUI();
+        renderProducts(products);
+    </script>
+</body>
+</html>
