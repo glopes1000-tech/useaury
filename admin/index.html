@@ -1,21 +1,643 @@
-<!-- Firebase App SDKs -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aury Joias e Semijoias | Elegância & Luxo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDukseSNCAM7IyMPeKswXAD9Ruj2F3p4Zk",
-    authDomain: "aury-semijoias.firebaseapp.com",
-    projectId: "aury-semijoias",
-    storageBucket: "aury-semijoias.appspot.com",
-    messagingSenderId: "534366776975",
-    appId: "1:534366776975:web:64308d6e2388b6b02ecafa"
-  };
+    <!-- Firebase SDKs e Inicialização do Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyDukseSNCAM7IyMPeKswXAD9Ruj2F3p4Zk",
+            authDomain: "aury-semijoias.firebaseapp.com",
+            projectId: "aury-semijoias",
+            storageBucket: "aury-semijoias.appspot.com",
+            messagingSenderId: "534366776975",
+            appId: "1:534366776975:web:64308d6e2388b6b02ecafa"
+        };
 
-  window.db = db;
-  window.firebaseCollections = { collection, getDocs, addDoc, deleteDoc, doc, setDoc };
-  window.dispatchEvent(new Event('firebase-ready'));
-</script>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.firebaseCollections = { collection, getDocs, addDoc, deleteDoc, doc, setDoc };
+        window.dispatchEvent(new Event('firebase-ready'));
+    </script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wine: {
+                            50: '#fdf2f4',
+                            100: '#fbe5e8',
+                            200: '#f7ced5',
+                            600: '#7a1221',
+                            800: '#4a0e17',
+                            900: '#32060c',
+                            950: '#210408',
+                        },
+                        gold: {
+                            300: '#f6e05e',
+                            400: '#ecc94b',
+                            500: '#d4af37',
+                            600: '#b78a28',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #210408; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Top Announcement Bar -->
+    <div onclick="toggleBrindeModal(true)" class="bg-gradient-to-r from-wine-950 via-wine-900 to-wine-950 text-gold-400 text-xs py-2.5 px-4 text-center font-medium border-b border-gold-500/20 tracking-wide flex items-center justify-center gap-2 shadow-inner cursor-pointer hover:text-white transition">
+        <i class="fa-solid fa-gift text-gold-500 animate-pulse"></i>
+        <span>Nas compras a partir de <strong>R\$ 189,90</strong>, você recebe um presente exclusivo Aury! <span class="underline ml-1 font-semibold text-gold-300">Ver Presente</span></span>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-40 bg-wine-900 border-b border-gold-500/30 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Admin Access Secreto -->
+                <button onclick="pedirSenhaAdmin()" class="flex items-center gap-3 group text-left cursor-pointer bg-transparent border-0 p-0 focus:outline-none" title="Área Restrita - Donas da Aury">
+                    <div class="w-12 h-12 rounded-full overflow-hidden border border-gold-500/60 p-1 bg-wine-950 shadow-md flex items-center justify-center">
+                        <img src="../logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden w-full h-full items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-full h-full text-white fill-current">
+                                <path d="M 50 15 C 30 15, 15 35, 15 50 C 15 65, 30 85, 50 85 C 70 85, 85 65, 85 50 C 85 35, 70 15, 50 15 Z" fill="#32060c"/>
+                                <path d="M 32 45 C 28 35, 40 30, 52 42 L 68 70 M 60 28 L 40 68" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                                <circle cx="36" cy="45" r="2.5" fill="#ffffff" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-serif text-2xl font-bold tracking-[0.25em] text-white group-hover:text-gold-500 transition">A U R Y</span>
+                        <span class="text-[9px] tracking-[0.3em] text-gold-500 uppercase -mt-1 font-semibold">Painel Admin & Loja</span>
+                    </div>
+                </button>
+
+                <!-- Desktop Navigation Dinâmico -->
+                <nav id="nav-categories" class="hidden md:flex items-center space-x-5 text-sm font-medium tracking-wide">
+                </nav>
+
+                <!-- Search & Action Icons -->
+                <div class="flex items-center space-x-5">
+                    <div class="relative hidden sm:block">
+                        <input type="text" id="search-input" onkeyup="searchProducts()" placeholder="Buscar joias..." class="bg-wine-950/80 text-white text-xs rounded-full pl-8 pr-4 py-2 w-36 focus:w-48 focus:outline-none border border-gold-500/30 focus:border-gold-500 transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gold-500 text-xs"></i>
+                    </div>
+
+                    <button class="text-gray-200 hover:text-gold-500 transition relative">
+                        <i class="fa-regular fa-heart text-xl"></i>
+                        <span id="wishlist-count" class="absolute -top-2 -right-2 bg-gold-500 text-wine-950 font-bold text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                    </button>
+
+                    <button id="cart-btn" onclick="toggleCart(true)" class="text-gray-200 hover:text-gold-500 transition relative">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-gold-500 text-wine-950 font-bold text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner (Sem o botão de painel admin) -->
+    <section class="relative bg-wine-950 text-white overflow-hidden border-b border-gold-500/20">
+        <div class="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            
+            <div class="max-w-xl text-center md:text-left">
+                <span class="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/30 text-gold-500 text-xs uppercase tracking-widest rounded-full mb-4 font-medium">Nova Coleção Luxo (Firebase Nuvem)</span>
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
+                    Detalhes que iluminam
+                </h1>
+                <p class="text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+                    expressões de amor em forma de Joia.<br>
+                    <span class="block mt-2 text-xs sm:text-sm text-gold-400 font-medium">Conheça as nossas semijoias com design sofisticado, de alta qualidade, hipoalergênicas e banhadas a ouro 18K.</span>
+                </p>
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                    <a href="#catalogo" class="px-8 py-3.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold text-xs uppercase tracking-wider rounded-full transition shadow-lg hover:shadow-gold-500/20">
+                        Ver Coleção
+                    </a>
+                    <a href="https://wa.me/5591984099331?text=Olá!%20Gostaria%20de%20atendimento%20VIP%20no%20catálogo." target="_blank" class="px-8 py-3.5 bg-transparent border border-gold-500/50 hover:border-gold-500 text-gold-500 text-xs uppercase tracking-wider rounded-full transition hover:bg-gold-500/10 flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp"></i> Atendimento VIP
+                    </a>
+                </div>
+            </div>
+
+            <!-- Featured Card -->
+            <div class="relative w-full max-w-sm">
+                <div class="absolute -inset-1 bg-gradient-to-r from-gold-500 to-wine-600 rounded-2xl blur opacity-30"></div>
+                <div class="relative bg-wine-900 border border-gold-500/30 rounded-2xl p-8 shadow-2xl text-center flex flex-col items-center">
+                    <div class="w-28 h-28 rounded-full border-2 border-gold-500/50 p-1 bg-wine-950 shadow-inner mb-4 flex items-center justify-center overflow-hidden">
+                        <img src="../logo aury.png" alt="Aury Semijoias" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="hidden w-full h-full items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-full h-full text-white fill-current">
+                                <path d="M 32 45 C 28 35, 40 30, 52 42 L 68 70 M 60 28 L 40 68" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h2 class="font-serif text-2xl text-white font-bold tracking-widest mb-1">A U R Y</h2>
+                    <p class="text-xs text-gold-500 tracking-[0.25em] uppercase mb-4 font-semibold">Semijoias Sincronizadas</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Catalogo -->
+    <main id="catalogo" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex flex-col md:flex-row items-center justify-between border-b border-gray-200 pb-6 mb-8 gap-4">
+            <div>
+                <h2 class="font-serif text-3xl font-bold text-wine-950">Nossas Joias</h2>
+                <p class="text-xs text-gray-500 mt-1">Gerenciadas em tempo real pela nuvem</p>
+            </div>
+            <div id="category-filters" class="flex flex-wrap items-center gap-2"></div>
+        </div>
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </main>
+
+    <!-- Modal do Painel Administrativo -->
+    <div id="admin-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleAdminModal(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gray-100 p-6 md:p-8">
+                
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <h3 class="font-serif text-2xl font-bold text-wine-950">🔒 Painel Nuvem - Aury Semijoias</h3>
+                    <button onclick="toggleAdminModal(false)" class="text-gray-500 hover:text-wine-900 text-xl font-bold">&times;</button>
+                </div>
+
+                <!-- Cadastrar Categoria -->
+                <div class="mb-6 p-4 bg-wine-50/50 rounded-xl border border-wine-100">
+                    <h4 class="font-bold text-wine-950 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-plus text-gold-500"></i> Cadastrar Nova Categoria (Nuvem)
+                    </h4>
+                    <form onsubmit="saveCategory(event)" class="flex gap-2 text-xs">
+                        <input type="text" id="cat-name" required placeholder="Nome da Categoria" class="flex-grow p-2.5 border rounded-lg text-xs bg-white">
+                        <button type="submit" class="px-4 py-2.5 bg-gold-500 hover:bg-gold-600 text-wine-950 font-bold uppercase rounded-lg transition shrink-0">Cadastrar</button>
+                    </form>
+                    <div class="mt-3">
+                        <span class="text-[10px] text-gray-500 font-semibold">Categorias Atuais:</span>
+                        <div id="admin-categories-list" class="max-h-28 overflow-y-auto space-y-1.5 mt-1 text-xs"></div>
+                    </div>
+                </div>
+
+                <hr class="my-4 border-gray-200">
+
+                <!-- Cadastrar Produto -->
+                <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4 text-xs">
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Nome da Joia:</label>
+                        <input type="text" id="prod-name" required class="w-full p-2.5 border rounded-lg text-xs" placeholder="Ex: Anel Luxo Ouro 18k">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Categoria:</label>
+                            <select id="prod-cat" class="w-full p-2.5 border rounded-lg text-xs font-medium"></select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Selo (Opcional):</label>
+                            <input type="text" id="prod-badge" class="w-full p-2.5 border rounded-lg text-xs" placeholder="Ex: Lançamento">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Preço Atual (R\$):</label>
+                        <input type="number" step="0.01" id="prod-price" required class="w-full p-2.5 border rounded-lg text-xs" placeholder="297.00">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Foto do Produto:</label>
+                        <input type="file" id="prod-image-file" accept="image/*" class="w-full p-2 border rounded-lg text-xs bg-gray-50 cursor-pointer">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Descrição:</label>
+                        <textarea id="prod-desc" rows="3" class="w-full p-2.5 border rounded-lg text-xs" placeholder="Detalhes..."></textarea>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" class="flex-grow py-3 bg-wine-900 hover:bg-wine-950 text-gold-500 font-bold uppercase tracking-wider rounded-lg transition shadow">
+                            Salvar Produto na Nuvem
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 border-t pt-4">
+                    <h4 class="font-bold text-gray-700 mb-2">Gerenciar Produtos na Nuvem:</h4>
+                    <div id="admin-products-list" class="max-h-48 overflow-y-auto space-y-2 text-xs"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="toggleQuickView(false)" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full border border-gray-100 p-6 md:p-8 relative">
+                <button onclick="toggleQuickView(false)" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-gray-100 hover:bg-wine-900 hover:text-white flex items-center justify-center transition text-gray-600">&times;</button>
+                <div id="quick-view-content" class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div onclick="toggleCart(false)" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+        <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div class="pointer-events-auto w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <div class="bg-wine-900 text-white p-6 flex items-center justify-between border-b border-gold-500/30">
+                    <h2 class="font-serif text-xl font-bold">Seu Carrinho</h2>
+                    <button onclick="toggleCart(false)" class="text-gray-300 hover:text-gold-500 transition text-lg">&times;</button>
+                </div>
+                <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+                <div class="p-6 bg-gray-50 border-t border-gray-200 space-y-4">
+                    <div class="flex justify-between text-sm font-semibold text-gray-700">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal" class="font-serif text-lg text-wine-900">R\$ 0,00</span>
+                    </div>
+                    <button onclick="checkoutWhatsApp()" class="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Finalizar pelo WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Gestão com Firebase Firestore -->
+    <script>
+        const numeroWhatsApp = "5591984099331";
+        const SENHA_ADMIN = "aury2026";
+
+        let categories = [];
+        let products = [];
+        let cart = [];
+        let wishlist = [];
+
+        window.addEventListener('firebase-ready', async () => {
+            await loadDataFromFirebase();
+        });
+
+        async function loadDataFromFirebase() {
+            const db = window.db;
+            const { collection, getDocs } = window.firebaseCollections;
+
+            try {
+                const catSnapshot = await getDocs(collection(db, "categories"));
+                if (!catSnapshot.empty) {
+                    categories = catSnapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                } else {
+                    categories = [
+                        { id: 'brincos', name: 'Brincos' },
+                        { id: 'gargantilhas', name: 'Gargantilhas' },
+                        { id: 'escapularios', name: 'Escapulários' },
+                        { id: 'conjuntos', name: 'Conjuntos' },
+                        { id: 'aneis', name: 'Anéis' },
+                        { id: 'pulseiras', name: 'Pulseiras e Braceletes' }
+                    ];
+                    for (let cat of categories) {
+                        await window.firebaseCollections.setDoc(window.firebaseCollections.doc(db, "categories", cat.id), { name: cat.name });
+                    }
+                }
+
+                const prodSnapshot = await getDocs(collection(db, "products"));
+                if (!prodSnapshot.empty) {
+                    products = prodSnapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
+                } else {
+                    products = [
+                        {
+                            id: 501,
+                            name: "Brinco Zircônia Quadrado 6x6mm",
+                            category: "brincos",
+                            price: 137.00,
+                            image: "brincos/brinco1.jpg",
+                            badge: "Lançamento",
+                            description: "O deslumbrante Brinco Zircônia Quadrado 6x6mm combina geometria perfeita e alto brilho."
+                        }
+                    ];
+                    for (let prod of products) {
+                        await window.firebaseCollections.setDoc(window.firebaseCollections.doc(db, "products", String(prod.id)), prod);
+                    }
+                }
+
+                renderCategoryUI();
+                renderProducts(products);
+            } catch (error) {
+                console.error("Erro ao sincronizar com Firebase:", error);
+            }
+        }
+
+        function renderCategoryUI() {
+            const navMenu = document.getElementById('nav-categories');
+            if (navMenu) {
+                navMenu.innerHTML = `<button onclick="filterCategory('todos')" class="nav-link text-white hover:text-gold-500 transition py-2 border-b-2 border-transparent hover:border-gold-500">Início</button>`;
+                categories.forEach(cat => {
+                    navMenu.innerHTML += `<button onclick="filterCategory('${cat.id}')" class="nav-link text-gray-200 hover:text-gold-500 transition py-2">${cat.name}</button>`;
+                });
+            }
+
+            const filterContainer = document.getElementById('category-filters');
+            if (filterContainer) {
+                filterContainer.innerHTML = `<button onclick="filterCategory('todos')" class="btn-cat active px-4 py-1.5 rounded-full text-xs font-semibold bg-wine-900 text-gold-500 shadow-sm transition">Todos</button>`;
+                categories.forEach(cat => {
+                    filterContainer.innerHTML += `<button onclick="filterCategory('${cat.id}')" class="btn-cat px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-wine-900 hover:text-gold-500 transition">${cat.name}</button>`;
+                });
+            }
+
+            const selectCat = document.getElementById('prod-cat');
+            if (selectCat) {
+                selectCat.innerHTML = '';
+                categories.forEach(cat => {
+                    selectCat.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                });
+            }
+        }
+
+        async function saveCategory(event) {
+            event.preventDefault();
+            const catNameInput = document.getElementById('cat-name');
+            const name = catNameInput.value.trim();
+            if (!name) return;
+
+            const id = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '-');
+
+            if (categories.some(c => c.id === id)) {
+                alert('Esta categoria já existe!');
+                return;
+            }
+
+            const db = window.db;
+            const { doc, setDoc } = window.firebaseCollections;
+
+            try {
+                await setDoc(doc(db, "categories", id), { name });
+                categories.push({ id, name });
+                renderCategoryUI();
+                renderAdminCategoryList();
+                catNameInput.value = '';
+                alert(`Categoria "${name}" salva na nuvem com sucesso!`);
+            } catch (e) {
+                alert("Erro ao salvar categoria.");
+            }
+        }
+
+        async function deleteCategory(id) {
+            if (confirm("Deseja excluir esta categoria?")) {
+                const db = window.db;
+                const { doc, deleteDoc } = window.firebaseCollections;
+                try {
+                    await deleteDoc(doc(db, "categories", id));
+                    categories = categories.filter(c => c.id !== id);
+                    renderCategoryUI();
+                    renderAdminCategoryList();
+                    renderProducts(products);
+                } catch (e) {
+                    alert("Erro ao excluir.");
+                }
+            }
+        }
+
+        function renderAdminCategoryList() {
+            const list = document.getElementById('admin-categories-list');
+            if (!list) return;
+            list.innerHTML = '';
+            categories.forEach(c => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-gray-50 p-2 rounded-lg border border-gray-200">
+                        <span class="font-medium text-gray-800">${c.name}</span>
+                        <button onclick="deleteCategory('${c.id}')" class="px-2 py-1 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded transition font-bold text-[10px]">Excluir</button>
+                    </div>
+                `;
+            });
+        }
+
+        function renderProducts(items) {
+            const grid = document.getElementById('product-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            items.forEach(product => {
+                const isFavorite = wishlist.includes(product.id);
+                const badgeHTML = product.badge ? `<span class="absolute top-3 left-3 z-10 bg-wine-900 text-gold-500 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border border-gold-500/30">${product.badge}</span>` : '';
+                const msgWhats = encodeURIComponent(`Olá! Gostaria de comprar: ${product.name} (R$ ${Number(product.price).toFixed(2)})`);
+                const catObj = categories.find(c => c.id === product.category);
+                const catName = catObj ? catObj.name : product.category;
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                        <div class="relative overflow-hidden aspect-square bg-gray-100">
+                            ${badgeHTML}
+                            <button onclick="toggleWishlist(${product.id})" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-gray-600 hover:text-red-500 shadow">
+                                <i class="${isFavorite ? 'fa-solid text-red-500' : 'fa-regular'} fa-heart"></i>
+                            </button>
+                            <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=600'">
+                            <button onclick="openQuickView(${product.id})" class="absolute inset-x-4 bottom-4 py-2 bg-wine-900/90 text-gold-500 text-xs font-bold uppercase rounded-lg">Ver Detalhes</button>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between space-y-3">
+                            <div>
+                                <span class="text-[10px] text-gray-400 uppercase tracking-widest">${catName}</span>
+                                <h3 class="font-serif text-lg font-bold text-gray-900 line-clamp-1">${product.name}</h3>
+                            </div>
+                            <span class="text-lg font-bold text-wine-900 font-serif">R$ ${Number(product.price).toFixed(2).replace('.', ',')}</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="addToCart(${product.id})" class="py-2.5 bg-wine-900 text-gold-500 font-bold text-[11px] uppercase rounded-lg">Sacola</button>
+                                <a href="https://wa.me/${numeroWhatsApp}?text=${msgWhats}" target="_blank" class="py-2.5 bg-green-600 text-white font-bold text-[11px] uppercase rounded-lg flex items-center justify-center gap-1 shadow">WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function pedirSenhaAdmin() {
+            const senha = prompt("Digite a senha de administradora:");
+            if (senha === SENHA_ADMIN) toggleAdminModal(true);
+            else if (senha !== null) alert("Senha incorreta!");
+        }
+
+        function toggleAdminModal(open) {
+            const modal = document.getElementById('admin-modal');
+            if (open) {
+                renderAdminList();
+                renderAdminCategoryList();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        async function saveProduct(event) {
+            event.preventDefault();
+            const name = document.getElementById('prod-name').value;
+            const category = document.getElementById('prod-cat').value;
+            const badge = document.getElementById('prod-badge').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const description = document.getElementById('prod-desc').value;
+            const imageFile = document.getElementById('prod-image-file').files[0];
+
+            if (!imageFile) {
+                alert('Selecione uma imagem.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const image = e.target.result;
+                const id = Date.now();
+                const newProduct = { id, name, category, badge, price, image, description };
+
+                const db = window.db;
+                const { doc, setDoc } = window.firebaseCollections;
+
+                try {
+                    await setDoc(doc(db, "products", String(id)), newProduct);
+                    products.push(newProduct);
+                    renderProducts(products);
+                    renderAdminList();
+                    document.getElementById('product-form').reset();
+                    alert('Produto salvo na nuvem com sucesso!');
+                } catch (err) {
+                    alert('Erro ao salvar produto.');
+                }
+            };
+            reader.readAsDataURL(imageFile);
+        }
+
+        async function deleteProduct(id) {
+            if (confirm("Deseja excluir este produto?")) {
+                const db = window.db;
+                const { doc, deleteDoc } = window.firebaseCollections;
+                try {
+                    await deleteDoc(doc(db, "products", String(id)));
+                    products = products.filter(p => p.id !== id);
+                    renderProducts(products);
+                    renderAdminList();
+                } catch (e) {
+                    alert("Erro ao excluir.");
+                }
+            }
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-products-list');
+            if (!list) return;
+            list.innerHTML = '';
+            products.forEach(p => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-lg border">
+                        <span class="font-medium text-gray-800">${p.name} - R$ ${p.price}</span>
+                        <button onclick="deleteProduct(${p.id})" class="px-2.5 py-1.5 bg-red-100 hover:bg-red-600 text-red-600 hover:text-white rounded text-[11px]">Excluir</button>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleCart(open) {
+            const drawer = document.getElementById('cart-drawer');
+            if (open) drawer.classList.remove('hidden');
+            else drawer.classList.add('hidden');
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+            if (existing) existing.quantity++;
+            else cart.push({ ...product, quantity: 1 });
+            updateCartUI();
+            toggleCart(true);
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const countBadge = document.getElementById('cart-count');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            if (!container) return;
+
+            countBadge.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+            container.innerHTML = '';
+            cart.forEach(item => {
+                container.innerHTML += `
+                    <div class="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border">
+                        <img src="${item.image}" class="w-12 h-12 object-cover rounded">
+                        <div>
+                            <h4 class="text-xs font-bold">${item.name}</h4>
+                            <span class="text-xs text-wine-900 font-serif">R$ ${item.price} x ${item.quantity}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            subtotalEl.textContent = `R$ ${cart.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2)}`;
+        }
+
+        function filterCategory(cat) {
+            if (cat === 'todos') renderProducts(products);
+            else renderProducts(products.filter(p => p.category === cat));
+        }
+
+        function searchProducts() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            renderProducts(products.filter(p => p.name.toLowerCase().includes(q)));
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return alert('Carrinho vazio!');
+            let msg = "Olá, Aury! Gostaria de finalizar meu pedido:\n\n";
+            cart.forEach(i => msg += `• ${i.name} (${i.quantity}x)\n`);
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function toggleQuickView(open) {
+            const m = document.getElementById('quick-view-modal');
+            if (open) m.classList.remove('hidden');
+            else m.classList.add('hidden');
+        }
+
+        function openQuickView(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('quick-view-content').innerHTML = `
+                <img src="${p.image}" class="w-full aspect-square object-cover rounded-xl">
+                <div class="space-y-4">
+                    <h2 class="font-serif text-2xl font-bold">${p.name}</h2>
+                    <span class="text-2xl font-bold text-wine-900 font-serif">R$ ${p.price.toFixed(2)}</span>
+                    <p class="text-xs text-gray-600">${p.description || ''}</p>
+                    <button onclick="addToCart(${p.id}); toggleQuickView(false);" class="w-full py-3 bg-wine-900 text-gold-500 font-bold uppercase rounded-lg">Adicionar à Sacola</button>
+                </div>
+            `;
+            toggleQuickView(true);
+        }
+    </script>
+</body>
+</html>
