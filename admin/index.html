@@ -127,7 +127,7 @@
         </div>
     </header>
 
-    <!-- Hero Banner (Sem o botão de painel admin) -->
+    <!-- Hero Banner -->
     <section class="relative bg-wine-950 text-white overflow-hidden border-b border-gold-500/20">
         <div class="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
@@ -296,7 +296,7 @@
         </div>
     </div>
 
-    <!-- Script de Gestão com Firebase Firestore -->
+    <!-- Script de Gestão com Firebase Firestore & Sincronização Automática -->
     <script>
         const numeroWhatsApp = "5591984099331";
         const SENHA_ADMIN = "aury2026";
@@ -315,16 +315,18 @@
             const { collection, getDocs } = window.firebaseCollections;
 
             try {
+                // 1. Carregar Categorias das suas pastas
                 const catSnapshot = await getDocs(collection(db, "categories"));
                 if (!catSnapshot.empty) {
                     categories = catSnapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
                 } else {
                     categories = [
-                        { id: 'brincos', name: 'Brincos' },
-                        { id: 'gargantilhas', name: 'Gargantilhas' },
-                        { id: 'escapularios', name: 'Escapulários' },
-                        { id: 'conjuntos', name: 'Conjuntos' },
                         { id: 'aneis', name: 'Anéis' },
+                        { id: 'brincos', name: 'Brincos' },
+                        { id: 'colares', name: 'Colares' },
+                        { id: 'conjuntos', name: 'Conjuntos' },
+                        { id: 'escapularios', name: 'Escapulários' },
+                        { id: 'gargantilhas', name: 'Gargantilhas' },
                         { id: 'pulseiras', name: 'Pulseiras e Braceletes' }
                     ];
                     for (let cat of categories) {
@@ -332,21 +334,86 @@
                     }
                 }
 
+                // 2. Carregar Produtos e Sincronizar Pastas Locais se o Banco Estiver Vazio
                 const prodSnapshot = await getDocs(collection(db, "products"));
                 if (!prodSnapshot.empty) {
                     products = prodSnapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
                 } else {
+                    // Mapeamento automático das fotos nas pastas locais
                     products = [
-                        {
-                            id: 501,
-                            name: "Brinco Zircônia Quadrado 6x6mm",
+                        // Anéis
+                        ...Array.from({ length: 13 }, (_, i) => ({
+                            id: 100 + i + 1,
+                            name: `Anel Solitário Ouro 18k Premium ${i + 1}`,
+                            category: "aneis",
+                            price: 159.90,
+                            image: `aneis/anel${i + 1}.jpg`,
+                            badge: i === 0 ? "Mais Vendido" : "",
+                            description: "Design clássico com acabamento anatômico banhado a ouro 18K."
+                        })),
+                        // Brincos
+                        ...Array.from({ length: 22 }, (_, i) => ({
+                            id: 200 + i + 1,
+                            name: `Brinco Zircônia Premium ${i + 1}`,
                             category: "brincos",
                             price: 137.00,
-                            image: "brincos/brinco1.jpg",
-                            badge: "Lançamento",
-                            description: "O deslumbrante Brinco Zircônia Quadrado 6x6mm combina geometria perfeita e alto brilho."
-                        }
+                            image: `brincos/brinco${i + 1}.jpg`,
+                            badge: i === 0 ? "Lançamento" : "",
+                            description: "Elegância e sofisticação com zircônias cravejadas de alta luminosidade."
+                        })),
+                        // Colares
+                        ...Array.from({ length: 10 }, (_, i) => ({
+                            id: 300 + i + 1,
+                            name: `Colar Delicado Banhado ${i + 1}`,
+                            category: "colares",
+                            price: 189.90,
+                            image: `colares/colar${i + 1}.jpg`,
+                            badge: "",
+                            description: "Colar sofisticado banhado a ouro 18k com brilho excepcional."
+                        })),
+                        // Conjuntos
+                        ...Array.from({ length: 10 }, (_, i) => ({
+                            id: 400 + i + 1,
+                            name: `Conjunto Luxo Exclusivo ${i + 1}`,
+                            category: "conjuntos",
+                            price: 249.90,
+                            image: `conjuntos/conjunto${i + 1}.jpg`,
+                            badge: "Coleção Luxo",
+                            description: "Conjunto completo harmônico para ocasiões inesquecíveis."
+                        })),
+                        // Escapulários
+                        ...Array.from({ length: 10 }, (_, i) => ({
+                            id: 500 + i + 1,
+                            name: `Escapulário Sagrado ${i + 1}`,
+                            category: "escapularios",
+                            price: 169.90,
+                            image: `escapularios/escapulario${i + 1}.jpg`,
+                            badge: "",
+                            description: "Escapulário com acabamento minucioso e proteção diária."
+                        })),
+                        // Gargantilhas
+                        ...Array.from({ length: 10 }, (_, i) => ({
+                            id: 600 + i + 1,
+                            name: `Gargantilha Choker Gold ${i + 1}`,
+                            category: "gargantilhas",
+                            price: 149.90,
+                            image: `gargantilhas/gargantilha${i + 1}.jpg`,
+                            badge: "",
+                            description: "Gargantilha anatômica e leve para valorizar seu colo."
+                        })),
+                        // Pulseiras
+                        ...Array.from({ length: 10 }, (_, i) => ({
+                            id: 700 + i + 1,
+                            name: `Pulseira & Bracelete Aury ${i + 1}`,
+                            category: "pulseiras",
+                            price: 139.90,
+                            image: `pulseiras/pulseira${i + 1}.jpg`,
+                            badge: "",
+                            description: "Bracelete ajustável com camada reforçada de verniz de proteção."
+                        }))
                     ];
+
+                    // Sincroniza e salva todos no Firestore automaticamente na nuvem
                     for (let prod of products) {
                         await window.firebaseCollections.setDoc(window.firebaseCollections.doc(db, "products", String(prod.id)), prod);
                     }
@@ -637,6 +704,14 @@
                 </div>
             `;
             toggleQuickView(true);
+        }
+
+        function toggleWishlist(id) {
+            const index = wishlist.indexOf(id);
+            if (index === -1) wishlist.push(id);
+            else wishlist.splice(index, 1);
+            document.getElementById('wishlist-count').textContent = wishlist.length;
+            renderProducts(products);
         }
     </script>
 </body>
